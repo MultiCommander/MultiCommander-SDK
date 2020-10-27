@@ -1,0 +1,7 @@
+LIBRARY "MCFSPluginSamples"
+
+EXPORTS
+    ; Explicit exports can go here
+    Create @1
+	Delete @2
+	GetExtensionInfo @3

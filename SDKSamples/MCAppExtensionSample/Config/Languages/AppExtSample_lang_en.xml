@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<text>
+  <commands gid="c">
+    <item iid="100" text="Get Selected Items" desc="Description for this command"/>
+    <item iid="101" text="Read From Config" desc="Description for this command"/>
+    <item iid="102" text="Get items and Select some" desc="Select every second item."/>
+    <item iid="112" text="Option of BOOL type. On/Off" />
+    <item iid="113" text="Option of TEXT type. Will take a text as parameter" />
+  </commands>
+  <menu gid="m">
+    <item iid="1" text="AppSample" />
+  </menu>
+
+</text>
+

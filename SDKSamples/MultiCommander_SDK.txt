@@ -1,0 +1,15 @@
+
+Multi Commander SDK - BETA v1.72
+=================================
+
+This SDK require atleast Build 2352 is Multi Commander.
+
+
+To build the sample please read the description first.
+
+ SDKSamples\MCAppExtensionSample\ReadMe.txt
+ SDKSamples\MCFSPluginSample\FS-Sample-ReadMe.txt
+
+ for help please use the forum
+   http://forum.multicommander.com/forum/index.php/board,9.0.html
+

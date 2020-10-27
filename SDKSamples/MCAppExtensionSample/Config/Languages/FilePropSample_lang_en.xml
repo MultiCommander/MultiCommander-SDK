@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<text>
+  <fileprop gid="p">
+    <item iid="200" text="Sample FileProperties"/>
+    <item iid="201" text="Prop1"/>
+    <item iid="202" text="Prop2"/>
+  </fileprop>
+
+</text>
+
