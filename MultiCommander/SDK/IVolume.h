@@ -186,7 +186,7 @@ class IVolumeCommandResult;
 // 
 //===========================================================================================================
 
-// OBOSLETE:.. MCIconSize::MCIconSize used instead
+// OBOSLETE:.. MCIconSize used instead
 // VFICON_
 #define VFICON_SMALL    0x000000001
 #define VFICON_LARGE    0x000000002
@@ -568,7 +568,7 @@ public:
   // This is optional. return false and system will use default. ( Only called if window shell does not return any icon )
   // Destory icon will be called on pIcon if GetIcon(..) returns true. when the icon has been copied and added to the internal cache
   // dwFlags = VFICON_xxxx - Icon size
-  virtual bool  GetIcon(HICON* pIcon, const WCHAR* fileExtension, MCIconSize::MCIconSize iconSize) = 0;
+  virtual bool  GetIcon(HICON* pIcon, const WCHAR* fileExtension, MCIconSize iconSize) = 0;
 
   // Return VSO_ flags
   virtual DWORD GetSupportedOperations() = 0;

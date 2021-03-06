@@ -191,7 +191,7 @@ public:
   virtual UINT64 Get_Attributes() const = 0;
   virtual DWORD  Get_AttributesWindows() const = 0;
 
-  virtual int   Get_IconIdx(MCIconSize::MCIconSize nIconSize) const = 0;
+  virtual int   Get_IconIdx(MCIconSize nIconSize) const = 0;
   virtual int   Get_IconNormalSmall() const = 0;
   virtual int   Get_IconNormalLarge() const = 0;
   virtual int   Get_IconNormalMedium() const = 0;

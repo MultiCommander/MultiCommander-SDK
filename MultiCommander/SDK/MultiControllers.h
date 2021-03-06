@@ -266,6 +266,7 @@ public:
 
   virtual void SetIconOption( int iconOptions , bool bUpdate) = 0;
   virtual void SetTextOption( int textOptions , bool bUpdate) = 0;
+  virtual void SetCustomIconSize( int xyIconSize, bool bUpdate) = 0;
 
   virtual void ModifyStyle( DWORD dwRemove , DWORD dwAdd ) = 0;
 };

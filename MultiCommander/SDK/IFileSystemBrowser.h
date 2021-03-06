@@ -35,6 +35,7 @@ MCNSBEGIN
 #define FMO_THUMNAILSETTINGS  132
 #define FMO_FLATFSVIEW        133
 #define FMO_SHOWCONTEXTONDOTDOT 134
+#define FMO_AUTOSCALE         135 // Autoscale the icons size
 
 #define FMO_VIEWMODE_ICONS        1  // Not Supported yet
 #define FMO_VIEWMODE_LIST         2  // List mode Only first column is show
@@ -181,7 +182,7 @@ public:
   // set to true and the background color of Items will be ignored
   virtual void SetColor_OverrideBackgroundColor(bool b) = 0;
 
-  virtual void SetIconSize(MCIconSize::MCIconSize nIconSize) = 0;
+  virtual void SetIconSize(MCIconSize nIconSize, bool bAutoScale = false) = 0;
   virtual void SetRowPadding(long lPadding) = 0;
 
   virtual BOOL SetFont( const WCHAR* FaceName , int Size , long FontFlags ) = 0;

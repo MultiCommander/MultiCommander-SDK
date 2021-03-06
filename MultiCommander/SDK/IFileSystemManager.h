@@ -98,7 +98,7 @@ public:
   virtual bool AddVirtualDevice( const WCHAR* displayName, const WCHAR* rootPath, HICON hIconSmall, HICON hIconLarge, const WCHAR* tooltip = NULL, DWORD dwDeviceFlags = 0 ) = 0;
 
   // Add Icon for virtual device
-  virtual int   AddVirtualDeviceIcon(const WCHAR* szDevice, MCIconSize::MCIconSize iconSize, HICON hIcon) = 0;
+  virtual int   AddVirtualDeviceIcon(const WCHAR* szDevice, MCIconSize iconSize, HICON hIcon) = 0;
   virtual bool  AddVirtualDeviceIcons(const WCHAR* szDevice, HICON hIconSmall, HICON hIconMedium, HICON hIconLarge, HICON hIconXLarge) = 0;
 
   // Attach a Toolbar to the DeviceManager. it will keep a drive toolbar update. NO other buttons and other item my be added to the same toolbar.
@@ -151,9 +151,9 @@ public:
 
   // Get Icon Index for a icon in the Shared Cache of fileitem icons
   virtual int   GetIconIndex( const WCHAR* strFilename , bool bSmallIcon ) = 0;
-  virtual int   GetIconIndex( const WCHAR* strFilename, MCIconSize::MCIconSize size) = 0;
+  virtual int   GetIconIndex( const WCHAR* strFilename, MCIconSize size) = 0;
 
-  virtual int   GetDefaultFolderIconIndex(MCIconSize::MCIconSize iconSize);
+  virtual int   GetDefaultFolderIconIndex(MCIconSize iconSize);
   virtual int   GetDefaultFolderIconIndex(bool bSmallIcon) = 0;
   virtual int   GetDefaultFileIconIndex(bool bSmallIcon) = 0;
 
@@ -162,14 +162,14 @@ public:
   virtual HICON GetDeviceIcon( CHAR chDevice, bool bSmallIcon) = 0;
   virtual HICON GetVirtualDeviceIcon(const WCHAR* strDeviceName, bool bSmallIcon) = 0;
 
-  virtual HICON GetFileIcon( const WCHAR* strFilename, MCIconSize::MCIconSize size) = 0;
-  virtual HICON GetDeviceIcon( CHAR chDevice, MCIconSize::MCIconSize size) = 0;
-  virtual HICON GetVirtualDeviceIcon(const WCHAR* strDeviceName, MCIconSize::MCIconSize size) = 0;
+  virtual HICON GetFileIcon( const WCHAR* strFilename, MCIconSize size) = 0;
+  virtual HICON GetDeviceIcon( CHAR chDevice, MCIconSize size) = 0;
+  virtual HICON GetVirtualDeviceIcon(const WCHAR* strDeviceName, MCIconSize size) = 0;
 
   // Get a copy of the image list (cast a HIMAGELIST* to ZHANDLE, not defined here as HIMAGELIST because dose not 
   // want all extension to require to include commctrl.h)
   // Remember to destory the image list your self using ImageList_Destroy(...);
-  virtual bool  GetIcons(ZHANDLE hImageList, MCIconSize::MCIconSize size = MCIconSize::Small) = 0;
+  virtual bool  GetIcons(ZHANDLE hImageList, MCIconSize size = MCIconSize::Small) = 0;
 
   // Get ALL subitems of pFileItem in a pCollection (Recursive)
   // pFileItem should be a CLONED item. so that not a real item is delete by accident.
@@ -186,8 +186,8 @@ public:
   virtual bool  AddItemForIconExtraction(IFileItem* pFileItem , DWORD nID, bool bGetSmallIcon) = 0;
   virtual bool  AddItemForIconExtraction(const WCHAR* strFilePath , DWORD nID, bool bGetSmallIcon) = 0;
 
-  virtual bool  AddItemForIconExtraction(IFileItem* pFileItem , DWORD nID, MCIconSize::MCIconSize iconSize) = 0;
-  virtual bool  AddItemForIconExtraction(const WCHAR* strFilePath , DWORD nID, MCIconSize::MCIconSize iconSize) = 0;
+  virtual bool  AddItemForIconExtraction(IFileItem* pFileItem , DWORD nID, MCIconSize iconSize) = 0;
+  virtual bool  AddItemForIconExtraction(const WCHAR* strFilePath , DWORD nID, MCIconSize iconSize) = 0;
 
   // Start Icon fetching thread
   virtual void  SetIconHandlerOptions(DWORD dwOptions) = 0;

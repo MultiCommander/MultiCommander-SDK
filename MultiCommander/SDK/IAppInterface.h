@@ -232,18 +232,18 @@ public:
   // If hInstance is 0, then current app is used.
   // is iconSize is MCIconSize::Small then 16x16 size is used (IF MC decided that size should be used for small icons)
   // It can load higher if needed if DPI settings are higher
-  virtual HICON LoadIconEx(HINSTANCE hInstance, UINT nID, MCIconSize::MCIconSize iconSize) = 0;
+  virtual HICON LoadIconEx(HINSTANCE hInstance, UINT nID, MCIconSize iconSize) = 0;
 
   // Load Icon from stored in MCIcons.dll
   virtual HICON LoadIconMC(UINT nID, int cx = 16, int cy = 16) = 0;
-  virtual HICON LoadIconMC(UINT nID, MCIconSize::MCIconSize iconSize) = 0;
+  virtual HICON LoadIconMC(UINT nID, MCIconSize iconSize) = 0;
   virtual HICON LoadIconMC(UINT nID, const SIZE& iconSize) = 0;
   // if bSmallIconSize is set to false, Large icon is loaded. and the size of the large icon is 
   // specified by the toolbar icon size settings, set hInstance to -1 to load from MCIcons.dll
   virtual HICON LoadIcon_ToolbarSize(HINSTANCE hInstance, UINT nID, bool bLargeIcon) = 0;
 
   // if bDPIScale if true the icon size is scaled up according to the DPI settings
-  virtual int  GetIconSize(MCIconSize::MCIconSize iconSize, bool bDPIScale) = 0;
+  virtual int  GetIconSize(MCIconSize iconSize, bool bDPIScale) = 0;
 
   //////////////////////////////////////////////////////////////////////////
   // CommandBar
@@ -268,8 +268,8 @@ public:
   // Will add ZHANDLE to list of returned handle. Use ReleaseZHandle if you do not store the handle in a member
   virtual ZHANDLE GetCommandBarByName(const WCHAR* szToolbarID) = 0;
 
-  virtual MCIconSize::MCIconSize GetMainToolbarIconSize() = 0;
-  virtual void    GetMainToolbarIconSize(int& cx, int& cy, MCIconSize::MCIconSize iconSize) = 0;
+  virtual MCIconSize GetMainToolbarIconSize() = 0;
+  virtual void    GetMainToolbarIconSize(int& cx, int& cy, MCIconSize iconSize) = 0;
 
   // not working
   virtual bool    RefreshToolBar(ZHANDLE hToolbar) = 0;
@@ -493,7 +493,7 @@ public:
   virtual int DPIHelperPixels2Points(int px) = 0;
 
   // input requested draw size and out the scaled sized.
-  virtual MCIconSize::MCIconSize  DPIScaleIconSize(MCIconSize::MCIconSize iconSize) = 0;
+  virtual MCIconSize  DPIScaleIconSize(MCIconSize iconSize) = 0;
 
   virtual bool DarkModeActive() = 0;
   // with darkmode translation (ONLY some colorid are translated)

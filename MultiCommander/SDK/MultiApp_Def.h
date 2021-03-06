@@ -17,16 +17,22 @@
 #include "Multi_Type.h"
 
 
-namespace MCIconSize
+enum class MCImageListSize
 {
-  enum MCIconSize
-  {
-    None  = 0,
-    Small = 1,   // 16x16
-    Medium= 2,   // 24x24
-    Large = 3,   // 32x32
-    XLarge= 4    // 48x48
-  };
+  None = 0,
+  Small = 1,   // 16x16  100%
+  Medium = 2,   // 24x24  150%
+  Large = 3,   // 32x32  200%
+  XLarge = 4    // 48x48 
+};
+
+enum class MCIconSize
+{
+  None = 0,
+  Small = 1,   // 100%
+  Medium = 2,   //150%
+  Large = 3,   // 200%
+  XLarge = 4    // 250%
 };
 
 
@@ -174,6 +180,7 @@ MCNSBEGIN
 #define MLVS_SELONNAVIGATE    0x04000000L // Auto check when doing multi selection
 #define MLVS_UNSELONSINGLESEL 0x08000000L // Auto Uncheck all when doing single selection
 #define MLVS_SELECTIONRECT    0x10000000L // Enable selection using selection rectangle
+#define MLVS_HIGHLIGHTSORTCOL 0x20000000L // Highlight sort column
 #define MLVS_DBGSELECTION     0x80000000L // Enable focus/selection status debugging.
 
 /*
