@@ -123,11 +123,11 @@ public:
   virtual DWORD GetEditOptions() = 0;
 
   virtual BOOL  SetImageList( ZHANDLE hCtrl , DWORD dwImgType , BOOL bShared , BOOL bSmallIcons) = 0; // OBSOLETE. DO NOT USE 
-  virtual bool  SetImageList( DWORD dwImgType , BOOL bShared , MCIconSize::MCIconSize iconSize) = 0;
+  virtual bool  SetImageList( DWORD dwImgType , BOOL bShared , MCIconSize iconSize) = 0;
 
   // 1 = SMALL 16x16 , 2 = Large 32x32
-  virtual void                     SetIconType(MCIconSize::MCIconSize nIconType) = 0;
-  virtual MCIconSize::MCIconSize   GetIconType() = 0;
+  virtual void         SetIconType(MCIconSize nIconType) = 0;
+  virtual MCIconSize   GetIconType() = 0;
 
   virtual void  SetSortMode(int nSortMode) = 0;
   virtual int   GetSortMode() = 0;
@@ -214,7 +214,7 @@ public:
 
   virtual BOOL	SetFont( const WCHAR* FaceName , int Size , long FontFlags ) = 0;
   // 1 = 16x16 (small), 2 = 32x32 (Large)
-  virtual BOOL  SetIconSize(MCIconSize::MCIconSize nIconSize) = 0;
+  virtual BOOL  SetIconSize(MCIconSize nIconSize) = 0;
   
   // Set PreItem like CheckBox, TreeImage size.
   virtual void SetPreItemSize(int nXY) = 0;
