@@ -20,7 +20,7 @@ MCNSBEGIN
 #define FILEPROP_DOUBLE       0x00000800L
 
 #define FILEPROP_FORMATDISP   0x00001000L // Format a display value from a cached raw property value.
-
+#define FILEPROP_DATE_UTC     0x00002000L // File property is date and UTC.. require FILEPROP_DATE
 #define FILEPROP_CUSTOMIZABLE 0x00010000L // The FileProperty item is customizable. The User can add/remove this column (not just enable/disable)
                                           // If this is not set. It can only be set by a module using the ColumnLayout
 
@@ -29,7 +29,7 @@ MCNSBEGIN
                                           // user have to go into the "customize..." option to find them
                                           // Add this to properties that are not often used. Because we do not want the entire screen to be covered when showing the contextmenu
 
-#define FILEPROP_DONOTCACHEASDISPLAY  0x00100000L // Do not cache value as display value.. Value will be featch every thing it is draw.. !! warnign very slow
+#define FILEPROP_DONOTCACHEASDISPLAY  0x00100000L // Do not cache value as display value.. Value will be featch every thing it is draw.. !! warning! very slow
 #define FILEPROP_EDITABLE     0x01000000L // - Not supported yet
 #define FILEPROP_EXECUTE      0x02000000L // - If set and user Ctrl + DoubleClick on property in the explorerPanel
                                           //   then IFileProperties->Execute(IFileItem* pFileItem , DWORD propType) is called

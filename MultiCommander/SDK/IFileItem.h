@@ -187,7 +187,7 @@ public:
   virtual const WCHAR* Get_Ext(BOOL bStripDot = FALSE) const = 0;
   
 
-  virtual INT64  Get_Size() const = 0;
+  virtual UINT64  Get_Size() const = 0;
   virtual UINT64 Get_Attributes() const = 0;
   virtual DWORD  Get_AttributesWindows() const = 0;
 

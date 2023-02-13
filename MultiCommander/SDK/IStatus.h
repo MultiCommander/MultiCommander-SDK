@@ -35,13 +35,9 @@ enum class OverwriteResult
 
 #ifndef _MULTILOGLEVELS_
 #define _MULTILOGLEVELS_
-  typedef enum
+enum class LogLevel
 {
-  _DEBUG_EVAL		  = 1, // Evaluation of variables ( eg check if ptr is null )
-  _DEBUG_TRACE	  = 2, // Trace function call or operations( enter / leave of function )
-  _DEBUG_RESULT	  = 3, // Result of function, or operation ( eg if a function failed )
-  _DEBUG_BEGINEND	= 4, // Begin / End of operations ( eg. Start/Stop of thread )
-  _DEBUG_STD      = 5, // Default Debug level
+  _DEBUG_      = 1, // Default Debug level
   //_SUCCESS = 7, // Something has Succeeded
   _INFO    = 10,// Info
   _WARNINIG= 20,// Warnings 
@@ -50,7 +46,7 @@ enum class OverwriteResult
   _ALERT   = 50,//
   _FATAL   = 100,// Fatal Errors, program can not continue after this
   _NOLOG   = 500 // Set this as log level to NOT log anything
-} LogLevel;
+};
 #endif
 
 #define LOGWIN_DEBUG	0
@@ -169,9 +165,20 @@ pProgress->Update();
 
 */
 enum FileOpErrorResult;
+
+// TODO: another name. It do alot more then just progress
+
+// Suggested names : IFileOperationInteraction , 
+//
+// parts IFileOperationsProgress, IFileSystemActions (need better name)
 class IProgress
 {
 public:
+
+  // Prepare a new file in the progress
+  virtual void Prepare(const wchar_t* szFrom, const wchar_t* szTo, UINT64 size) = 0;
+  virtual void InitRebuild(const wchar_t* szText, UINT64 maxSize) = 0;
+
   virtual void Set_FromA( const CHAR* strText ) = 0;
   virtual void Set_FromW( const WCHAR* strText ) = 0;
 
@@ -186,20 +193,28 @@ public:
 
   virtual void Set_ProgressText(const WCHAR* szProgressTextFormat) = 0; // text must contain two "%I64d" like "%I64d of %I64d Bytes dones"
 
+  // Will update total done, based on previous call, 
+  virtual void Set_Total_Processed_By_Current(INT64 currentDone) = 0;
+
   // ADD nDone Value to both to both the Current and Total ,and update if needed
   virtual void Add_Done( UINT64 nDone , BOOL bContinuesViewUpdate = TRUE, BOOL bForceUpdateProgress = FALSE ) = 0;
 
   // Will only add nDone to the Current counter. Will Update if needed
   virtual void Add_CurrentDone(UINT nDone, BOOL bContinuesViewUpdate = TRUE) = 0;
 
-  virtual void Add_Total_Max( UINT64 nMax ) = 0;
+  virtual void Set_Total_Max(UINT64 nMax) = 0;
+  virtual void Add_Total_Max(UINT64 nMax) = 0;
   virtual void Add_Total_Done( UINT64 nNow , BOOL bUpdate = FALSE ) = 0;
+  virtual void Set_Total_Done(UINT64 val) = 0;
 
   virtual void Add_Skipped(DWORD nItems) = 0;
   // Add Items Done.
   virtual void Add_ItemsDone(DWORD nItems) = 0;
   virtual void Add_TotalItems(DWORD nItems) = 0;
 
+  // Init - New items Will preprare for new current item in progress bar.. (no need to call Operation_Start() )
+
+  virtual void OnInitCurrentItem(UINT64 nCurrentItemMaxValue) = 0;
   // use this before and after a file is copied. Without them the copy speed and time will not be calculated correct
   virtual void Operation_Start() = 0;
   virtual void Opertation_Update( DWORD dwBytesCount ) = 0; // no of bytes been written/read . used to calculate read/write speed

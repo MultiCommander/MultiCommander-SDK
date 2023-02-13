@@ -254,7 +254,7 @@ public:
   virtual bool ShowWGetDownload() = 0;
 
   // dwFlags = FSM_SFDT_ flags
-  virtual bool SetFolderDateTime(const IFileItemCollection* pFolders, DWORD dwFlags, const WCHAR* szIgnore, const WCHAR* szIncludeOnly) = 0;
+  virtual bool SetFolderDateTime(IFileItemCollection* pFolders, DWORD dwFlags, const WCHAR* szIgnore, const WCHAR* szIncludeOnly) = 0;
 
 };
 

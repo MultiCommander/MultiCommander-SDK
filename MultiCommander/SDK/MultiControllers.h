@@ -33,6 +33,8 @@ public:
   virtual void EnableChangeNotification(bool b) = 0;
 
   virtual void EnableWindow(bool b) = 0;
+
+  virtual void SetFont(const WCHAR* FaceName, int Size, long FontFlags) = 0;
 };
 
 class __declspec(novtable) IButtonControl : public IHObject, public ISetEvent
@@ -159,6 +161,10 @@ class __declspec(novtable) IDeviceComboCtrl : public IComboBoxControl
 public:
 
   virtual void SetDeviceFilter(const WCHAR* szDeviceFilter) = 0;
+
+  virtual void ShowFreeSpace(bool bShowFreeSpace, int size1k = 1000) = 0;
+  virtual void UpdateFreeSpaceWhenShowing(bool bUpdateFreeSpaceOnShow) = 0;
+
   // It will set the item best suited for the path as active.
   virtual BOOL SetCurrentPath( const WCHAR* strPath ) = 0;
 
@@ -251,7 +257,7 @@ public:
 #define   IconOption_XLargeIcons  3
 
 // ToolBarButton - Flags for InsertButton(..)
-#define TBBTN_MODULE_CONTEXTMENU    0x00000010  // Forward ContextMen Request to Module that owns the command ( Handle AM_MENUCONTEXTMENU )
+#define TBBTN_MODULE_CONTEXTMENU    0x00000010  // Forward ContextMenu Request to Module that owns the command ( Handle AM_SHOWCMDCONTEXTMENU )
 #define TBBTN_MODULE_DEVICEITEM     0x00000100  
 class __declspec(novtable) IToolbarViewInterface : public IHObject
 {
@@ -298,7 +304,25 @@ public:
   virtual void Release() = 0;
 };
 
-class __declspec(novtable) ICommandBarInterface : public IHObject
+// a CommandBarsController have an multiple Bars that then have command items
+// Like like different Commands Groups
+class __declspec(novtable) ICommandBarsInterface : public IHObject
+{
+public:
+  virtual bool SetIconSize(int iconXY) = 0;
+
+  virtual ZHANDLE AddCommandBar() = 0;
+  
+  virtual int Bars() = 0;
+  
+  virtual ZHANDLE BarAtIdx(size_t idx) = 0;
+
+  virtual void SetFont(const WCHAR* FaceName, int Size, long FontFlags) = 0;
+
+  virtual void EnableContextMenuHandling() = 0;
+};
+
+class __declspec(novtable) ICommandGroupBarInterface : public IHObject
 {
 public:
   // Commandbar interface will call Release() on context when it is finished so interface need to delete it self 
@@ -310,13 +334,13 @@ public:
   virtual int  ChangeIcon(ZHANDLE hCmd, int nIconResID) = 0;
 
   // This are not used yet
-  virtual ZHANDLE InsertControl(ZHANDLE hCtrl) = 0;
+  virtual ZHANDLE InsertControl(MCNS::ZHANDLE hCtrl, int cxWidth, bool bStretch, LPRECT pMargin, const WCHAR* tooltip) = 0;
   virtual ZHANDLE InsertButton(ZHANDLE hCmd, int nIndex = -1, DWORD dwFlags = 0) = 0;
   virtual void    InsertSeperator() = 0;
   
   virtual int   AddIcon(HICON) = 0;
 
-
+  // Not Used
   virtual void SetIconOption(int iconOptions, bool bUpdate) = 0;
   virtual void SetTextOption(int textOptions, bool bUpdate) = 0;
 

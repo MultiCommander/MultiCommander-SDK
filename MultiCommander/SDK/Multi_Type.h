@@ -14,6 +14,7 @@
 #include "MCNamespace.h"
 MCNSBEGIN
 
+// Change to void*
 typedef DWORD_PTR ZHANDLE;
 
 typedef DWORD_PTR XHANDLE;

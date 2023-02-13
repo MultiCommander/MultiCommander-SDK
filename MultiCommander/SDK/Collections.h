@@ -47,7 +47,7 @@ public:
   virtual DWORD Count() = 0;
   virtual void  Clear() = 0;
 
-  virtual BOOL  GetAt(DWORD nIndex, WCHAR* strText, int strMaxLen,INT64& Value) = 0;
+  virtual BOOL  GetAt(DWORD nIndex, WCHAR* strText, int strMaxLen,INT64& value) = 0;
 
   // deletes instance
   virtual void Release() = 0;

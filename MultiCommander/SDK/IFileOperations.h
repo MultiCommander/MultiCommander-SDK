@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2000-2016 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2000-2022 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -27,6 +27,11 @@ MCNSBEGIN
 #define FOIS_SUCCESS  0x00000001L
 #define FOIS_FAILED   0x00000002L
 
+// File operation - Overwrite attributes flags
+#define FO_OWF_OVERWRITE_READONLY 0x00010000L
+#define FO_OWF_OVERWRITE_SYSTEM   0x00020000L
+#define FO_OWF_OVERWRITE_HIDDEN   0x00040000L
+#define FO_OWF_OVERWRITE_ALLFLAGS 0x00070000L
 
 // overwrite by condition flags
 enum class OverwriteOption
@@ -54,6 +59,7 @@ enum class OverwriteOption
 class __declspec(novtable) IFileOpStatusCallback
 {
 public:
+  virtual       ~IFileOpStatusCallback() = default;
   virtual DWORD GetOperationStatus() = 0;
   virtual void  SetOperationStatus(DWORD nStatus) = 0;
   virtual void  SetStatus( DWORD_PTR nRefItem , DWORD nStatus ) = 0;
@@ -86,6 +92,8 @@ public:
   virtual WCHAR*  GetTargetName( WCHAR* str , UINT nMaxLenght ) = 0;
   // Get Source Item Path
   virtual WCHAR*  GetSource( WCHAR* str , UINT nMaxLenght ) = 0;
+  virtual const WCHAR* GetSource() const = 0;
+
   virtual DWORD   GetOptions() = 0;
 
   // Set/Get custom RefValue. (Sent to plugin via callback)

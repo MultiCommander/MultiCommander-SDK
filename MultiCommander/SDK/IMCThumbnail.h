@@ -14,6 +14,7 @@
 #include "MCNamespace.h"
 MCNSBEGIN
 
+class IMultiAppInterface;
 class IFileItem;
 
 #define MCTHUMB_QUALITY_BEST    0x00000100    // Slowest but best quality (Bilinear?) 

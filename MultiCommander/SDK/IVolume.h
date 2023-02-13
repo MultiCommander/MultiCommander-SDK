@@ -59,15 +59,15 @@ class IVolumeCommandResult;
 #define VC_TRUNCATE_EXISTING   5
 
 // Seek Flags
-#define VSEEK_FILE_BEGIN  0
+#define VSEEK_FILE_BEGIN    0
 #define VSEEK_FILE_CURRENT  1
-#define VSEEK_FILE_END    2
+#define VSEEK_FILE_END      2
 
-// dwExecuteOptions Flags in Many of the call.
-#define EXO_ISFILE               0x00000001 // Referenced file is a file   ( Only used by the DeleteFile(...) Api )
-#define EXO_ISFOLDER             0x00000002 // Referenced file is a folder ( Only used by the DeleteFile(...) Api )
-#define EXO_ISREPARSEPOINT       0x00000008 // Referenced file is a ReparsePoint. So file mkight need to be opended with that flag
-#define EXO_EXTRALONGPATHALLOWED 0x00000100 // Allow extra long if supported. ( User have given Ok for extra long path )
+// dwExecuteOptions Flags in many of the call.
+#define EXO_ISFILE               0x00000001 // Referenced file is a file   ( Only used by the DeleteItem(...) Api )
+#define EXO_ISFOLDER             0x00000002 // Referenced file is a folder ( Only used by the DeleteItem(...) Api )
+#define EXO_ISREPARSEPOINT       0x00000008 // Referenced file is a ReparsePoint. So file might need to be opended with that flag
+#define EXO_EXTRALONGPATHALLOWED 0x00000100 // Allow extra long if supported. ( User have given OK for extra long path )
 #define EXO_ASADMIN              0x80000000 // Run this command as administrator if possible
 
 // Return result flags for Execute(...)
@@ -91,6 +91,7 @@ class IVolumeCommandResult;
 // Then when showing it in the filebrowser, No icon will will be shown since it is not files. 
 // So if file items are Virtual and This flag is set on the volume then the volume will be able to 
 // provide a ICON.. both HICON and a Icon Matcher. 
+
 #define IVF_EXECUTEFILE      0x00000008  // IVolume->Execute(..) supported
 #define IVF_CONNECT          0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP Volume)
 #define IVF_ASSIGN2NUMDEVICE 0x00000020  // Auto Assign device to a Num Device ( 0: -> 9: ) (Require IVG_CONNECT to )
@@ -158,7 +159,8 @@ class IVolumeCommandResult;
 // Eg Read from one Zip and Write to another zip. Then the read does not need to Unpack the data, but can read the raw zip data for that file entry
 // and insert it into the target zip.
 
-#define VSO_SLOW              0x00400000 // Volume is slow. When doing copy/move operation the path will not be requested to be updated after every change.
+#define VSO_SLOW              0x00400000 // Volume is slow. 
+// When doing copy/move operation the path will not be requested to be updated after every change.
 // update will happen after file operation is completed.
 
 #define VSO_BATCH_TARGETLOCAL 0x00800000 // Use Batch method for copy if target volume is Local filesystem, AND we got multiple items are in queue.
@@ -177,9 +179,11 @@ class IVolumeCommandResult;
 #define VSO_RUNASADMIN_INTERNAL_COPY  0x04000000 // If source and target are the same modules.. (eg both is REG: ) then use direct copy operation.
 // BUT only if RetryAsAdmin has been requested.
 
+#define VSO_IS_FILEARCHIVE 0x10000000 // Volume is a file archive. Stored file inside a file (Zip, rar, 7zip, and so on, virtual devices like FTP, WPD is NOT this )
+
 // Not used yet - For future support
-#define VSO_READ_PASSWORD      0x10000000  // Volume support Password for reading (unpacking) items. (eg. password protected Zip, 7Zip archive for example)
-#define VSO_WRITE_PASSWORD     0x20000000  // Volume support Password for writing (packing) items. (eg. password protected Zip, 7Zip archive for example)
+//#define VSO_READ_PASSWORD      0x10000000  // Volume support Password for reading (unpacking) items. (eg. password protected Zip, 7Zip archive for example)
+//#define VSO_WRITE_PASSWORD     0x20000000  // Volume support Password for writing (packing) items. (eg. password protected Zip, 7Zip archive for example)
 
 #define VSO_FREESPACE_NOTAVAIL 0x40000000  // Free space information is not available for this volume
 // Only valid if you have a Volume that is connected to a device like FTP:, REG: or somethings.
@@ -366,17 +370,17 @@ struct FileOperationErrorContext
 {
 public:
   
-  // DO NOT FORGET TO CALL pSourceFile->Release(); else memeory leak
+  // DO NOT FORGET TO CALL pSourceFile->Release(); else memory leak
   MCNS::IFileInfo* pSourceFile = nullptr; 
 
-  // DO NOT FORGET TO CALL pTargetFile->Release(); else memeory leak
+  // DO NOT FORGET TO CALL pTargetFile->Release(); else memory leak
   MCNS::IFileInfo* pTargetFile = nullptr; 
 
   DWORD ErrorCode = VERROR_UNKNOWN_ERROR;
   DWORD Response = ED_ABORT;
   MCNS::OverwriteOption owOption = MCNS::OverwriteOption::Ask;
 
-  // if error was file alredy exists and user selected an overwrite option that require processing
+  // if error was 'file alredy exists' and user selected an overwrite option that require processing
   OverwriteResult ProcessedOvewriteResult = OverwriteResult::NotProcessed; // 0 do not overwrite, 1 overwrite. -1 no processing done
   bool AllowInternalOverwriteEvaluation = true; // If pSourceFile and pTargetFile is not complete set to false, if true file properties will be evaulated and ProcessedOvewriteResult will be set 
 
@@ -386,7 +390,7 @@ public:
   bool Reserved1 = false;
 };
 
-// If FileSystem Interface is supporting Stream Read/Write then this is returned from IVolume::CreateFile
+// If IVolume Interface is supporting Stream Read/Write then this is returned from IVolume::CreateFile
 class __declspec(novtable) IRWFile
 {
 public:
@@ -448,9 +452,11 @@ public:
 class __declspec(novtable) IVolumeFindCallback
 {
 public:
+  virtual      ~IVolumeFindCallback() = default;
+
   virtual bool AbortRequested() const = 0;
-  virtual void ItemsFound(size_t nItems) = 0; // set found items 
-  virtual void ItemsFoundInc() = 0; // increment found items with +1
+  virtual void ItemsFound(const size_t nItems) = 0; // set found items 
+  virtual void ItemsFoundInc() = 0;           // increment found items with +1
   
 };
 
@@ -505,6 +511,9 @@ public:
 
   // Called once during startup. Load your config and store that in a singleton. since this instance will be deleted after the call
   virtual long PreStartInit(IMultiAppInterface* /*pInterface*/) { return 0; }
+
+  // Only use PostStartInit if you need to init things from the Main UI thread.. else use PreStartInit
+  virtual long PostStartInit(IMultiAppInterface* /*pInterface*/) { return 0; }
 
   virtual DWORD DataBuffertWriteAlignment(const WCHAR* szPath = nullptr) { return 0; }
 
@@ -612,6 +621,9 @@ public:
   // Close volume. Unpack/Disconnect
   virtual BOOL Close() = 0;
 
+  // Needs a call to open with VOF_PARSECONTENT
+  virtual bool NeedParseContent() = 0;
+
   // Not Used.. I Think... Remove this
   virtual BOOL isOpen() = 0;
 
@@ -666,8 +678,7 @@ public:
 
   // Delete file
   // set bFile to FALSE to strExistingFile is a folder
-  // TODO - Rename conflicts with Win MACRO for DeleteFile
-  virtual BOOL DeleteFile( const WCHAR* szExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) = 0;
+  virtual BOOL DeleteItem( const WCHAR* szExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) = 0;
 
   // Get/Set file attribute
   // return INVALID_FILE_ATTRIBUTES if szFilename does not exists on volume.

@@ -32,6 +32,8 @@ public:
   virtual ZHANDLE  OpenConfig( long ModuleID = -1 , BOOL bSet = TRUE , BOOL bGetConfigElement = TRUE) = 0;
   virtual BOOL     CloseConfig( ZHANDLE hHandle ) = 0;
 
+  virtual bool     VerifyConfig() = 0;
+
   // Validate existance of a config file, The path MUST be under the MC config path or the "restore" default file will not work
   virtual bool     ValidateExistence(const wchar_t* szFilename, bool bRestoreIfMissing) = 0;
   // if bForceWrite is true then conifg is saved even if no change are detected.
@@ -46,7 +48,7 @@ public:
   virtual ZHANDLE  CreateConfigElement( ZHANDLE hParent , const WCHAR* strElement ) = 0;
   virtual bool     RemoveConfigElement( ZHANDLE hElement ) = 0;
 
-  virtual ZHANDLE  GetConfigElement( ZHANDLE hHandle , const WCHAR* strElement , bool bCreate = false ) = 0;
+  virtual ZHANDLE  GetConfigElement( ZHANDLE hHandle , const WCHAR* strElement , bool bCreate = false, bool bSilent = false) = 0;
   virtual ZHANDLE  GetNextElement( ZHANDLE hHandle , const WCHAR* strElement ) = 0;
 
   virtual BOOL     GetConfigText( ZHANDLE hHandle , const WCHAR* strElement , WCHAR* strOut , long lstrSize ) = 0;

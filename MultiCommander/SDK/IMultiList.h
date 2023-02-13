@@ -94,7 +94,9 @@ struct MultiListColorProfile
   COLORREF crDefaultActiveAltBG;
   COLORREF crDefaultInActiveAltBG;
 
-  COLORREF crGridlines;
+  COLORREF crGridlinesV;
+  COLORREF crGridlinesH;
+
   COLORREF crFocusRect;
   bool bForceFocusRectColor;
 };

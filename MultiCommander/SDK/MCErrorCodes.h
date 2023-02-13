@@ -117,6 +117,7 @@ MCNSBEGIN
 
 #define VERROR_CANCELLED_BY_USER        ERROR_CANCELLED // 1223
 #define VERROR_READERROR_AUTORETRY      3500L // Some read error happen. But Just autoretry
+#define VERROR_ABORTED_PROCESS_IN_SHUTDOWN 3998L // Operation was aborted, Process is in Shutdown mode
 #define VERROR_INVALID                  3999L
 #define VERROR_UNKNOWN_ERROR            4000L // Error code with 4000 and over is Unknown. 
 

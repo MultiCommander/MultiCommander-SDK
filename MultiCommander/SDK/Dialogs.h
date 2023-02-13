@@ -38,7 +38,7 @@ public:
   virtual void    SetPrepareCount( DWORD nCount ) = 0;
   virtual void    SetPreparing(bool b) = 0;
 
-  virtual void    SetCurrentItem(const WCHAR* szCurrentItem); // Filename / path of current item being processed ( thread safe ? )
+  virtual void    SetCurrentItem(const WCHAR* szCurrentItem) = 0; // Filename / path of current item being processed ( thread safe ? )
 
   virtual void    SetCaption( const WCHAR* strCaption ) = 0; // NOT safe.
 
