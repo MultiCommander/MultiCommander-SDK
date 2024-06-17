@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2000-2022 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -42,7 +42,10 @@ enum class OverwriteOption
   RenameThis,
   AppendThis,
   OverwriteThis,
-  // all from there will affect all conflicts in the queue
+  AutoRenameThisNew, // Not imp yet
+  AutoRenameThisExisting, // Not imp yet
+
+  // all from here will affect all conflicts in the queue
   SkipAll = 10,
   OverwriteAll,
   OverwriteIfNewer,
@@ -53,6 +56,14 @@ enum class OverwriteOption
   OverwriteIfSizeSmaller,
   OverwriteKeepBothAutoRenameNew,
   OverwriteKeepBothAutoRenameExisting,
+};
+
+enum class ProtectedFileOption // if file has ReadOnly/System/Hidden attribute set
+{
+  Abort = -1,
+  Ask = 0,
+  DeleteOrOverwriteAll,
+  SkipAll,
 };
 
 

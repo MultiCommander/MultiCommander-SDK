@@ -22,6 +22,8 @@ typedef DWORD_PTR XHANDLE;
 typedef long    ZRETURN; // return code
 typedef DWORD_PTR   ZCMDID;
 
+constexpr ZHANDLE ZHANDLE_INVALIDHANDLE = ((ZHANDLE)(LONG_PTR)-1);
+
 class __declspec(novtable) IHObject
 {
 public:

@@ -61,7 +61,7 @@ DWORD InternalReadFileOperations::WriteItem(WriteToDiskItem* pItem)
 
 InternalWriteFileOperations::InternalWriteFileOperations( MCNS::IProgress* pProgress , DWORD dwFlags )
   : InternalFileOperation(IFOBJ_WRITE)
-  , m_pMemFS(NULL)
+  , m_pMemFS(nullptr)
   , m_pProgress(pProgress)
   , m_dwFlags(dwFlags)
 {
@@ -100,11 +100,6 @@ DWORD InternalWriteFileOperations::StartDeleteFileOperations()
   DWORD nItems = CountDeleteItems();
   bool bAbort = false;
 
-  // Set this to make the progress window poll for updates.
-  // else you need to call m_pProgress->Update your self. and if the updates are very fast
-  // It might slow things down.
-  m_pProgress->StartAutoUpdate(250);
-
   m_pProgress->Set_Current_Max(nItems);
   m_pProgress->Set_Current_Now(0);
 
@@ -142,8 +137,6 @@ DWORD InternalWriteFileOperations::StartDeleteFileOperations()
     }
   }
 
-  m_pProgress->StopAutoUpdate();
-
   return 0;
 }
 
@@ -156,13 +149,8 @@ DWORD InternalWriteFileOperations::StartCopyFileOperations()
   DWORD nItems = CountItems();
   bool bAbort = false;
   
-  if(m_pBuffer == NULL)
+  if(m_pBuffer == nullptr)
     m_pBuffer = std::unique_ptr<BYTE[]>(new BYTE[BUFFERSIZE]);
-
-  // Set this to make the progress window poll for updates.
-  // else you need to call m_pProgress->Update your self. and if the updates are very fast
-  // It might slow things down.
-  m_pProgress->StartAutoUpdate(250);
 
   for(DWORD n = 0; n < nItems; ++n)
   {
@@ -171,7 +159,7 @@ DWORD InternalWriteFileOperations::StartCopyFileOperations()
 
     std::wstring strTargetPath = TargetNameAt(n);
     const IFileItem* pSourceItem  = SourceItemAt(n);
-    if(pSourceItem == NULL || strTargetPath.empty())
+    if(pSourceItem == nullptr || strTargetPath.empty())
       continue;
 
     DWORD dwError = CopyFileItem(pSourceItem, strTargetPath);
@@ -187,7 +175,6 @@ DWORD InternalWriteFileOperations::StartCopyFileOperations()
     }
   }
 
-  m_pProgress->StopAutoUpdate();
   m_pProgress->EnableButtonSkip(true);
   return TRUE;
 }
@@ -197,7 +184,7 @@ DWORD InternalWriteFileOperations::DeleteFileItem(const std::wstring& strDeleteI
   std::shared_ptr<MemoryFile> pFile = m_pMemFS->FindByPath(strDeleteItem.c_str());
   if(pFile)
   {
-    m_pProgress->Set_FromW(strDeleteItem.c_str());
+    m_pProgress->Set_From(strDeleteItem.c_str());
     m_pProgress->UpdateNames();
 
     std::shared_ptr<MemoryFile> pFolder = m_pMemFS->FindByPath(strDeleteItem.c_str(), true);
@@ -228,7 +215,7 @@ DWORD InternalWriteFileOperations::CopyFileItem(const MCNS::IFileItem* pSourceIt
   if(pSourceItem->isFolder())
   {
     std::shared_ptr<MemoryFile> pFile = m_pMemFS->CreateFolderItem(strTargetPath.c_str());
-    if(pFile == NULL)
+    if(pFile == nullptr)
       return VERROR_ALREADY_EXISTS; 
 
     SetFileDateAndAttributes(pFile, pSourceItem);
@@ -237,7 +224,7 @@ DWORD InternalWriteFileOperations::CopyFileItem(const MCNS::IFileItem* pSourceIt
   }
 
   // Open Source File
-  AutoHandle hFile(::CreateFile(szSourcePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, 0));
+  AutoHandle hFile(::CreateFile(szSourcePath, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr));
   if(hFile.isValid() == false)
   {
     //m_pProgress->ShowFileOperationsErrorDlg();
@@ -246,7 +233,7 @@ DWORD InternalWriteFileOperations::CopyFileItem(const MCNS::IFileItem* pSourceIt
 
   // Create Target File
   std::shared_ptr<MemoryFile> pFile = m_pMemFS->FindCreateItemByPath(strTargetPath.c_str());
-  if(pFile == NULL)
+  if(pFile == nullptr)
   {
     return VERROR_ACCESS_DENIED;
   }
@@ -256,7 +243,7 @@ DWORD InternalWriteFileOperations::CopyFileItem(const MCNS::IFileItem* pSourceIt
 
   DWORD dwBytesRead = 0;
   DWORD dwBytesWritten = 0;
-  while(ReadFile(hFile, m_pBuffer.get(), BUFFERSIZE, &dwBytesRead, 0) && dwBytesRead > 0)
+  while(ReadFile(hFile, m_pBuffer.get(), BUFFERSIZE, &dwBytesRead, nullptr) && dwBytesRead > 0)
   {
     if(pFile->WriteBytes(m_pBuffer.get(), dwBytesRead, &dwBytesWritten) == false)
     {
@@ -293,7 +280,7 @@ DWORD InternalWriteFileOperations::CopyFileItem(const MCNS::IFileItem* pSourceIt
   return VERROR_NOERROR;
 }
 
-void InternalWriteFileOperations::NotifyPathChange(const std::wstring& pathItem, bool bDelete)
+void InternalWriteFileOperations::NotifyPathChange(const std::wstring& pathItem, bool bDelete) const
 {
   TCHAR szTargetPath[_MC_MAXPATH_];
   wcscpy(szTargetPath, _T("SMP2:\\")); 
@@ -312,7 +299,7 @@ void InternalWriteFileOperations::SetProgressTargetPath(const std::wstring& strT
   {
     std::wstring targetPath = _T("SMP2:\\");
     targetPath += strTargetPath;
-    m_pProgress->Set_ToW(targetPath.c_str());
+    m_pProgress->Set_To(targetPath.c_str());
   }
 }
 
@@ -320,7 +307,7 @@ void InternalWriteFileOperations::SetProgressSourceInfo(const MCNS::IFileItem* p
 {
   pSourceItem->Get_FullPath(szSourcePath, (DWORD)len);
   szSourcePath[len - 1] = '\0';
-  m_pProgress->Set_FromW(szSourcePath);
+  m_pProgress->Set_From(szSourcePath);
 
   m_pProgress->Set_Current_Now(0);
   m_pProgress->Set_Current_Max(pSourceItem->Get_Size());
@@ -334,7 +321,7 @@ DWORD InternalWriteFileOperations::CountItems()
 const MCNS::IFileItem* InternalWriteFileOperations::SourceItemAt(DWORD n)
 {
   if(n >= m_vItems.size())
-    return NULL;
+    return nullptr;
 
   return m_vItems.at(n).m_pSourceItem;
 }
@@ -342,7 +329,7 @@ const MCNS::IFileItem* InternalWriteFileOperations::SourceItemAt(DWORD n)
 std::wstring     InternalWriteFileOperations::TargetNameAt(DWORD n)
 {
   if(n >= m_vItems.size())
-    return NULL;
+    return nullptr;
 
   return m_vItems.at(n).m_strTargetName;
 }

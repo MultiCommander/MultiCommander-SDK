@@ -49,6 +49,8 @@ MCNSBEGIN
 #define VERROR_ALREADY_EXISTS_AS_FOLDER   12L // Can not create file, a FOLDER already exists with the same name
 
 #define VERROR_ACCESS_DENIED      20L // Access to file/folder is denied
+
+#define VERROR_WACCESS_DENIED_PROTECTED 24L // Replaces Error 25,26, File has S/H/RO attribute can cannot be overwritten without removing attribute
 #define VERROR_WACCESS_DENIED_RO  25L // Write Access Denied. File/folders is Readonly
 #define VERROR_WACCESS_DENIED_VRO 26L // Write Access Denied. volumes is Readonly ( CD/DVD ROM or write protected disk)
 #define VERROR_WACCESS_DENIED_SH  27L // Write Access Denied. file/folder is System or Hidden
@@ -57,7 +59,7 @@ MCNSBEGIN
 #define VERROR_SHARING_VIOLATION  32L // File is being used by another process
 
 #define VERROR_VOLUME_NOT_ENOUGH_SPACE 39L // There is not enough space on volume
-#define VERROR_VOLUME_FULL        40L // Volume is full (just the error code above in most cases instead.)
+#define VERROR_VOLUME_FULL        40L // Volume is full (use the error code above in most cases instead.)
 #define VERROR_VOLUME_BADFORMAT   41L // Volume file is bad. corrupt or invalid format.
 #define VERROR_VOLUME_NOTFOUND    42L // Can open volume. Corrupt or bad volume file.
 
@@ -90,18 +92,21 @@ MCNSBEGIN
 #define VERROR_DELETE_SYSTEM        162 // Can not delete file. because it is a system file
 #define VERROR_DELETE_DIRNOTEMPTY   163 // Can not delete directory. because it is not empty
 #define VERROR_DELETE_ACCESSDENIED  164 // Can not delete file/folder. Access is denied. no permission to delete folders
-
 #define VERROR_FILE_INCOMPLETE      165 // A file write have been aborted.. file X is incomplete
+
+#define VERROR_DELETE_PROTECTED     166 // Can't delete file, it is protected. has S/H or RO attributes
+
 #define VERROR_FILE_CORRUPT         170 // file X is corrupt
 #define VERROR_FILE_CORRUPT_CRC     171 // File %s is corrupt due to CRC error!
 
 #define VERROR_MISSING_VOLFILE      172 // Volume file is missing.. like ( RAR . if a rar file is missing. or other sold archive stuff )
 #define VERROR_BROWSING_VOLUME      173 // Error browsing volume
   //#define VERROR_FILE_CORRUPT_KEEP    171 // file X is corrupt, Keep it anyway ?
-#define VERROR_WRITEERROR_SC1           173 // Write happened during write.. (Special case, no sys buffer, HW do not support that)
-#define VERROR_WRITEERROR               174 // Unknown error happen while writing
 
-#define VERROR_CUSTOM                   175 // Custom error.
+#define VERROR_WRITEERROR_SC1           175 // Write happened during write.. (Special case, no sys buffer, HW do not support that)
+#define VERROR_WRITEERROR               176 // Unknown error happen while writing
+
+#define VERROR_CUSTOM                   178 // Custom error.
 
 #define VERROR_NOT_SAME_ROOTPATH        180
 #define VERROR_EXISTS_NOT_SAME_ROOTPATH 181 // Exists Function - Not Same Rootpath.. can't check if path exists.. 

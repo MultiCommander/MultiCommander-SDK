@@ -78,6 +78,7 @@ MCNSBEGIN
 #define ZCV_FILESYSTEMBROWSERVIEW 600  // FileSystemBrowser View
 #define ZCV_FOLDERTREEVIEW        610  // FolderTree view
 //#define ZCV_FILEWORKSPACEVIEW     650  // FileWorkspace view
+#define ZCV_PREVIEWVIEW           660  // Data Preview view
 
 #define ZCV_TOOLBAR               700  // A Toolbar view
 #define ZCV_COMMANDBAR            710  // A Commandbar view
@@ -414,6 +415,18 @@ MCNSBEGIN
 #define ZFVX_DOCUMENT_DATESAVED   79
 #define ZFVX_DOCUMENT_LAST_ID  79
 
+#define ZFVX_CLOUD_STATE       85
+#define ZFVX_CLOUD_STATE_ATTRIB 86
+
+// Custom script columns
+#define ZFVX_SCIPTCOL_1  100
+#define ZFVX_SCIPTCOL_2  101
+#define ZFVX_SCIPTCOL_3  102
+#define ZFVX_SCIPTCOL_4  103
+#define ZFVX_SCIPTCOL_5  104
+#define ZFVX_SCIPTCOL_6  105
+#define ZFVX_SCIPTCOL_LAST 105
+
 
 // Filemanager column Flags
 #define ZFV_CF_NONE             0x0000
@@ -529,6 +542,7 @@ MCNSBEGIN
 #define AM_VIEW           21151 // View file. (Will only be sent if a module is registered as a viewer )
 #define AM_EDIT           21152 // Edit file (Will only be sent if a module is registered as a editor)
 #define AM_VIEWEX         21153
+#define AM_SHOWPREVIEW    21160 // Show preview of file in focus. sent to registered preview handler. (wparam = true for show in right panel, lparam wchar* for filepath to file in focus)
 
 // Notification Message.. this message might be handled or not.
 // ComboBox Changed

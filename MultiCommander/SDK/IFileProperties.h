@@ -30,7 +30,7 @@ struct __declspec(novtable) ExecuteInfo
   int size; // sizeof(ExecuteInfo) 
 
   IFileItem* pFileItem;
-  WORD propType;
+  WORD PropertyId;
   POINT pt;
   HWND hHwndParent;
 
@@ -40,6 +40,7 @@ struct __declspec(novtable) ExecuteInfo
 class __declspec(novtable) IFileProperties
 {
 public:
+  virtual ~IFileProperties() = default;
 
   // Override this and return GUID
   virtual char* Get_ModuleID() = 0;
@@ -78,23 +79,23 @@ public:
   // Exception to the rule - FILEPROP_DATE properties are not called for DisplayValues. GetPropNum are always called on them. And we use the
   // user defined date/time settings so show the date
   
-  virtual bool GetDisplayValue(IFileItem* pFileItem, WCHAR* propData, WORD nLen, WORD propType, const volatile bool* pAbort) = 0; // Remove volatile - Not needed 
+  virtual bool GetDisplayValue(IFileItem* pFileItem, WCHAR* propData, WORD nLen, WORD PropertyId, const volatile bool* pAbort) = 0; // Remove volatile - Not needed 
 
   // called for property that are FILEPROP_STRING
-  virtual bool GetPropStr(IFileItem* pFileItem, WCHAR* propData, WORD nLen, WORD propType, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
+  virtual bool GetPropStr(IFileItem* pFileItem, WCHAR* propData, WORD nLen, WORD PropertyId, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
 
   // called if property is FILEPROP_NUM or FILEPROP_DATE  if DATE the INT64 is a FILETIME 
-  virtual bool GetPropNum(IFileItem* pFileItem, INT64* propData, WORD propType, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
+  virtual bool GetPropNum(IFileItem* pFileItem, INT64* propData, WORD PropertyId, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
 
   // called if property is FILEPROP_DOUBLE
-  virtual bool GetPropDouble(IFileItem* pFileItem, double* propData, WORD propType, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
+  virtual bool GetPropDouble(IFileItem* pFileItem, double* propData, WORD PropertyId, const volatile bool* pAbort) = 0;// Remove volatile - Not needed 
 
   // optional
   // Format a cached raw property value. If false is return GetDisplayValue will be called and if that failed raw value is converted to string and used
-  virtual bool FormatDisplayValue(WCHAR* /*szDisplayValue*/, WORD /*nLen*/, double /*dValue*/, WORD /*propType*/) { return false;  }
-  virtual bool FormatDisplayValue(WCHAR* /*szDisplayValue*/, WORD /*nLen*/, INT64 /* nValue*/, WORD /*propType*/) { return false;  }
+  virtual bool FormatDisplayValue(WCHAR* /*szDisplayValue*/, WORD /*nLen*/, double /*dValue*/, WORD /*PropertyId*/) { return false;  }
+  virtual bool FormatDisplayValue(WCHAR* /*szDisplayValue*/, WORD /*nLen*/, INT64 /* nValue*/, WORD /*PropertyId*/) { return false;  }
 
-  virtual bool SetProp(IFileItem* pFileItem, WORD propType, const BYTE* propData) = 0;
+  virtual bool SetProp(IFileItem* pFileItem, WORD PropertyId, const BYTE* propData) = 0;
 
   // override to support execute action on property
   // return true if handled. else something else will get the execute command

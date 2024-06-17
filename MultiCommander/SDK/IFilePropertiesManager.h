@@ -14,6 +14,7 @@
 #include "MCNamespace.h"
 MCNSBEGIN
 
+// FileProperty Flags (Options)
 #define FILEPROP_STRING       0x00000100L
 #define FILEPROP_NUM          0x00000200L
 #define FILEPROP_DATE         0x00000400L
@@ -32,11 +33,11 @@ MCNSBEGIN
 #define FILEPROP_DONOTCACHEASDISPLAY  0x00100000L // Do not cache value as display value.. Value will be featch every thing it is draw.. !! warning! very slow
 #define FILEPROP_EDITABLE     0x01000000L // - Not supported yet
 #define FILEPROP_EXECUTE      0x02000000L // - If set and user Ctrl + DoubleClick on property in the explorerPanel
-                                          //   then IFileProperties->Execute(IFileItem* pFileItem , DWORD propType) is called
+                                          //   then IFileProperties->Execute(IFileItem* pFileItem , DWORD PropertyId) is called
 
 struct FilePropData
 {
-  WORD propType;
+  WORD PropertyId;
   short IdealWidth;
   short columnFlags; // See IMLC_ for IMLC_OVERDRAW, IMLC_ALLOW_OVERDRAW, IMLC_SORT_DECENDING, IMLC_STRETCH
   BYTE  Align;
@@ -53,7 +54,7 @@ class __declspec(novtable) IFilePropertiesManager
 {
 public:
 
-  //	propType - Unique Identifier for property
+  //	PropertyId - Unique Identifier for property
   //  propName - name identifier
   //  displayName - The name shown to the user
   //  categoryName - Category name shown to the user

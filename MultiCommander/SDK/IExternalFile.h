@@ -51,8 +51,12 @@ class __declspec(novtable) IExternalFile
 {
 public:
   virtual ~IExternalFile() = default;
+
   // filepath to the external file. where it is temporary copied to.
   virtual bool	GetExternalFilename( WCHAR* strFilename, int nMaxLen);
+
+  // folder path to where external file is located
+  virtual bool	GetTempFolder(WCHAR* strFolder, int nMaxLen);
 
   // Original filepath reference
   virtual bool  GetRefFilename(WCHAR* szFilename, int nLen);

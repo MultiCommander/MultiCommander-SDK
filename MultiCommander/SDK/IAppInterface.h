@@ -64,10 +64,11 @@ class IDataViewerWindow;
 #define FMTBYTES_DECIMALS2  0x03000000 // 0
 
 
-class __declspec(novtable) IMultiAppInterface 
+class /*__declspec(novtable)*/ IMultiAppInterface 
 {
 public:
 
+  virtual ~IMultiAppInterface() = default;
   // WARNING ! a persistent interface is limited in what it can do. 
   // It should NOT be used to get/create UI components. only be use it for none GUI API.
   // And ReleasePersistenAppInterface() should be run at program exist. example from DLL_PROCESS_DETECH
@@ -143,6 +144,9 @@ public:
   // return TRUE if we are currently on the MAIN UI Thread.
   virtual bool  IsMainThread() = 0;
 
+  // true if MultiCommander is shutting down
+  virtual bool  IsShuttingDown() = 0;
+
   virtual void  PostMessage( DWORD dwMessage , WPARAM dwModuleID , LPARAM wParam ) = 0;
   virtual BOOL  RedirectMessageViaMainThread(DWORD dwMessage, WPARAM wParam , LPARAM lParam ) = 0;
   virtual BOOL  RedirectMessageViaGUIThread(DWORD dwMessage, WPARAM wParam , LPARAM lParam ) = 0;
@@ -217,6 +221,12 @@ public:
   virtual BOOL  RegisterAsLauncher(const WCHAR* szName, const WCHAR* strFilter, DWORD dwOptions = 0 ) = 0;
 
   virtual BOOL  RegisterAsPanelApplication(ZHANDLE hCmd) = 0;
+
+  // use nullptr to register it as the default handle. (Only valid for build in preview handler)
+  virtual bool  RegisterAsPreviewHandler(const wchar_t* szFileFilter) = 0;
+
+  // Not used yet.
+  virtual void RegisterUsage(const DWORD nID) const = 0;
 
   // Query interface for UI or Other Objects
   // See the ZOBJ_FILESYSTEM and ZOBJ_xxxx constants for interface to query
@@ -316,7 +326,7 @@ public:
   virtual bool    GetTabLabel( ZHANDLE h , WCHAR* strLabel , UINT nMaxLenght ) = 0;
   virtual void    SetTabLabel( ZHANDLE h , const WCHAR* strLabel, const WCHAR* strTooltip = NULL, DWORD dwFlags = 0 ) = 0;
   virtual void    SetTabIcon( ZHANDLE h , HICON hIcon ) = 0;
-  virtual void    SetTabIconAndLabel(ZHANDLE h, HICON hIcon, const WCHAR* strLabel, const WCHAR* strToolTip = NULL, DWORD dwFlags = 0 );
+  virtual void    SetTabIconAndLabel(ZHANDLE h, HICON hIcon, const WCHAR* strLabel, const WCHAR* strToolTip = NULL, DWORD dwFlags = 0 ) = 0;
   virtual void    SetTabTooltip( ZHANDLE h , const WCHAR* strTooltip) = 0;
 
   // set color to -1 to use default  
@@ -500,13 +510,17 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // IMiscUtils
   // 
-  // Will format a bytes 
+  // Will format bytes 
   // Example
   // m_pAppInterface->FormatBytes(szBytes, _countof(szBytes), nBytes, FMTBYTES_SIZE_BYTES|FMTBYTES_UNIT_LONG|FMTBYTES_DECIMALS0);
   virtual bool FormatBytes(WCHAR* szOut, DWORD nLen, INT64 nSize, DWORD dwFlags) = 0;
 
   virtual bool ReadToString(WCHAR* szBuffer, DWORD nMaxLen, const WCHAR* szFilename) = 0;
   virtual bool ReadToString(char* szBuffer, DWORD nMaxLen, const WCHAR* szFilename) = 0;
+
+  virtual void KeepSystemAlive(bool alive) = 0;
+
+  virtual void AddRestoreTabInfo(const wchar_t* szDisplayName, IKeyValCollection* pTabParameters) = 0;
 };
 
 MCNSEND

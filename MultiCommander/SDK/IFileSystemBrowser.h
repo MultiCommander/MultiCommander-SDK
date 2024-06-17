@@ -204,5 +204,7 @@ public:
   virtual bool DoRenameCurrent() = 0;
 
   virtual void Collapse() = 0;
+
+  virtual IFileItem* GetFileItemInFocus() const = 0;
 };
 MCNSEND

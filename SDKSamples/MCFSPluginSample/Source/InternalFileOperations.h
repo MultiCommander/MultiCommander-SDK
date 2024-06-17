@@ -116,7 +116,7 @@ public:
    void ClearDeleteItems();
 
 private:
-  void NotifyPathChange(const std::wstring& pathItem, bool bDelete = false);
+  void NotifyPathChange(const std::wstring& pathItem, bool bDelete = false) const;
 
   DWORD StartCopyFileOperations();
   DWORD StartDeleteFileOperations();

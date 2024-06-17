@@ -12,6 +12,7 @@
 #pragma once
 
 #include "IEventCallback.h"
+#include "IFileItem.h"
 #include "MCNamespace.h"
 MCNSBEGIN
 
@@ -345,6 +346,15 @@ public:
   virtual void SetTextOption(int textOptions, bool bUpdate) = 0;
 
   virtual void ModifyStyle(DWORD dwRemove, DWORD dwAdd) = 0;
+};
+
+class __declspec(novtable) IDataPreviewControl : public IHObject
+{
+public:
+  virtual void  OnShowPreview(const MCNS::IFileItem* pFileItem) = 0;
+  virtual void  OnShowPreview(const wchar_t* szFilePath) = 0;
+
+  virtual void SetFont(const WCHAR* szFaceName, int size, long fontFlags) = 0;
 };
 
 MCNSEND
