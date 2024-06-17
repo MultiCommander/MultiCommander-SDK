@@ -14,8 +14,8 @@ namespace
 {
   const WCHAR* GetLastPathPart(const WCHAR* szPath)
   {
-    if(szPath == NULL)
-      return NULL;
+    if(szPath == nullptr)
+      return nullptr;
 
     const WCHAR* szLast = wcsrchr(szPath, '\\');
     if(szLast)
@@ -39,7 +39,7 @@ namespace
 
 bool MCFSSampleInternal::GetExtensionInfo( DLLExtensionInfo* pInfo )
 {
-  if( pInfo == NULL )
+  if( pInfo == nullptr)
     return false;
 
   wcsncpy( pInfo->wsName , L"FSSample-Internal" , 100 );
@@ -89,10 +89,10 @@ long MCFSSampleInternal::PreStartInit( IMultiAppInterface* pInterface )
   IFileSystemManager* pFSManager = (IFileSystemManager*)pInterface->QueryInterface( ZOBJ_FILESYSTEM , 0 );
 
   // Load icon med ID 348 from the MCIcons.dll - 348 is a Movies icon..  
-  HICON hAppIconSmall = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 327 , false);
-  HICON hAppIconLarge = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 327 , true );
+  const HICON hAppIconSmall = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 327 , false);
+  const HICON hAppIconLarge = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 327 , true );
 
-  pFSManager->AddVirtualDevice( _T("SMP2 (Internal)"), L"SMP2:" , hAppIconSmall, hAppIconLarge, NULL, DEVF_FREESPACE_EMPTY);
+  pFSManager->AddVirtualDevice( _T("SMP2 (Internal)"), L"SMP2:" , hAppIconSmall, hAppIconLarge, nullptr, DEVF_FREESPACE_EMPTY);
   DestroyIcon(hAppIconSmall);
   DestroyIcon(hAppIconLarge);
 
@@ -153,7 +153,7 @@ BOOL MCFSSampleInternal::Open( const WCHAR* szVolume , const WCHAR* szMountPath 
 {
   UNREFERENCED_PARAMETER(dwFlags);
 
-  if( szMountPath != NULL )
+  if( szMountPath != nullptr)
   {
     if(_wcsnicmp(szMountPath, L"smp2:" , 5) == 0)
       m_strMountPath = L"SMP2:";
@@ -236,7 +236,7 @@ BOOL MCFSSampleInternal::FindNext( ZHANDLE h , /*[out]*/ IFileItem *pItem /*= NU
   MemoryFileEnumerator* pEnum = (MemoryFileEnumerator*)h;
   if(pEnum)
   {
-    std::shared_ptr<MemoryFile> pFile= pEnum->GetNext();
+    const std::shared_ptr<MemoryFile> pFile= pEnum->GetNext();
     if(pFile)
     {
       if(pItem)
@@ -254,7 +254,7 @@ BOOL MCFSSampleInternal::FindNext( ZHANDLE h , /*[out]*/ WCHAR* szFileName , int
   MemoryFileEnumerator* pEnum = (MemoryFileEnumerator*)h;
   if(pEnum)
   {
-    std::shared_ptr<MemoryFile> pFile= pEnum->GetNext();
+    const std::shared_ptr<MemoryFile> pFile= pEnum->GetNext();
     if(pFile)
     {
       wcsncpy(szFileName, pFile->Name(), nameLen);
@@ -273,7 +273,7 @@ DWORD MCFSSampleInternal::SetFileData( ZHANDLE h , /*[out]*/ IFileItem *pItem , 
   MemoryFileEnumerator* pEnum = (MemoryFileEnumerator*)h;
   if(pEnum)
   {
-    std::shared_ptr<MemoryFile> pFile = pEnum->GetCurrent();
+    const std::shared_ptr<MemoryFile> pFile = pEnum->GetCurrent();
     if(pFile)
     {
       return pFile->SetFileData(pItem);
@@ -285,7 +285,7 @@ DWORD MCFSSampleInternal::SetFileData( ZHANDLE h , /*[out]*/ IFileItem *pItem , 
 
 BOOL MCFSSampleInternal::FindClose( ZHANDLE h )
 {
-  MemoryFileEnumerator* pEnum = (MemoryFileEnumerator*)h;
+  const MemoryFileEnumerator* pEnum = (MemoryFileEnumerator*)h;
   if(pEnum)
     delete pEnum;
 
@@ -299,7 +299,7 @@ BOOL MCFSSampleInternal::Exists( const WCHAR* szPath )
   if(szPath[0] == '\0') // ROOT
     return TRUE;
 
-  std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
+  const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
   if(pFile)
     return TRUE;
 
@@ -315,14 +315,14 @@ BOOL MCFSSampleInternal::Makedir( const WCHAR* szPath , const FILETIME* pFileTim
 
   szPath = RemoveDeviceFromPath(szPath);
 
-  std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
+  const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
   if(pFile)
   {
     m_nLastError = VERROR_ALREADY_EXISTS;
     return FALSE;
   }
 
-  auto pFolder = m_MemFS.CreateFolderItem(szPath);
+  const auto pFolder = m_MemFS.CreateFolderItem(szPath);
   if(pFolder)
     return TRUE;
 
@@ -338,25 +338,24 @@ BOOL MCFSSampleInternal::MoveItem( const WCHAR* szExistingFile , const WCHAR* sz
   szExistingFile = RemoveDeviceFromPath(szExistingFile);
   szNewFilename = RemoveDeviceFromPath(szNewFilename);
 
-  if(szExistingFile == NULL || szNewFilename == NULL)
+  if(szExistingFile == nullptr || szNewFilename == nullptr)
     return FALSE;
 
-  if(szNewFilename == '\0')
+  if(szNewFilename == nullptr)
     return FALSE;
 
   std::shared_ptr<MemoryFile> pFileExisting = m_MemFS.FindByPath(szExistingFile);
   if(pFileExisting)
   {
-
-    std::shared_ptr<MemoryFile> pTargetFolder = m_MemFS.FindByPath(szNewFilename, true);
-    if(pTargetFolder == NULL)
+    const std::shared_ptr<MemoryFile> pTargetFolder = m_MemFS.FindByPath(szNewFilename, true);
+    if(pTargetFolder == nullptr)
     {
       m_nLastError = VERROR_PATH_NOT_FOUND;
       return FALSE;
     }
 
     // Remove file from parent
-    std::shared_ptr<MemoryFile> pFolder = m_MemFS.FindByPath(szExistingFile, true);
+    const std::shared_ptr<MemoryFile> pFolder = m_MemFS.FindByPath(szExistingFile, true);
     if(pFolder)
       pFolder->DeleteFileItem(pFileExisting); // Since we are using smart ptr. it is not really deleted
 
@@ -381,7 +380,7 @@ BOOL MCFSSampleInternal::DeleteItem( const WCHAR* szExistingFile , DWORD dwExecu
 UINT64 MCFSSampleInternal::GetAttributes( const WCHAR* szFilename )
 {
   szFilename = RemoveDeviceFromPath(szFilename);
-  std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szFilename);
+  const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szFilename);
   if(pFile)
     return pFile->Attributes();
 
@@ -421,7 +420,7 @@ INT MCFSSampleInternal::IsFolderEmpty( const WCHAR* szFolderPath )
   ResetLastError();
 
   szFolderPath = RemoveDeviceFromPath(szFolderPath);
-  std::shared_ptr<MemoryFile> pFolder = m_MemFS.FindByPath(szFolderPath);
+  const std::shared_ptr<MemoryFile> pFolder = m_MemFS.FindByPath(szFolderPath);
 
   if(pFolder)
   {
@@ -461,7 +460,7 @@ IRWFile* MCFSSampleInternal::CreateItem( const WCHAR* szFilename , DWORD dwAcces
   UNREFERENCED_PARAMETER(dwRWFlags);
   UNREFERENCED_PARAMETER(ftFileTime);
 
-  return NULL;
+  return nullptr;
 }
 
 BOOL MCFSSampleInternal::CloseItem( IRWFile* pIFile, bool bAbort )
@@ -482,7 +481,7 @@ BOOL MCFSSampleInternal::GetSize( const WCHAR* szPath , const WCHAR* szFilter , 
   UNREFERENCED_PARAMETER(szFilter);
 
   szPath = RemoveDeviceFromPath(szPath);
-  std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
+  const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);
 
   // Ignore filter for now. Normal folder sizing does not set filters.
 
@@ -533,15 +532,15 @@ BOOL MCFSSampleInternal::BatchFileOperations_QueueGetItem( ZHANDLE hIntOp , cons
   if(dwFlags & INTERNALOP_DELETE) // Add file (pItem) to our file system
   {
     szFilename = RemoveDeviceFromPath(szFilename);
-    std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szFilename);
-    if(pFile == NULL)
+    const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szFilename);
+    if(pFile == nullptr)
     {
       m_nLastError = VERROR_FILE_NOT_FOUND;
       return FALSE;
     }
 
     InternalWriteFileOperations* pWriteOperation = (InternalWriteFileOperations*)hIntOp;
-    if( pWriteOperation == NULL )
+    if( pWriteOperation == nullptr)
       return FALSE;
 
     pWriteOperation->AddDeleteItem(szFilename);
@@ -550,7 +549,7 @@ BOOL MCFSSampleInternal::BatchFileOperations_QueueGetItem( ZHANDLE hIntOp , cons
   else if (dwFlags & INTERNALOP_READ)
   {
      InternalReadFileOperations* pReadOperation = (InternalReadFileOperations*)hIntOp;
-     if( pReadOperation == NULL )
+     if( pReadOperation == nullptr)
        return FALSE;
    
      szFilename = RemoveDeviceFromPath(szFilename);
@@ -574,7 +573,7 @@ BOOL MCFSSampleInternal::BatchFileOperations_QueueInsertItem( ZHANDLE hIntOp , c
   if(dwFlags & INTERNALOP_ADD) // Add file (pItem) to our filesystem
   {
     szWriteName = RemoveDeviceFromPath(szWriteName);
-    std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szWriteName);
+    const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szWriteName);
     if(pFile)
     {
       // ?
@@ -583,7 +582,7 @@ BOOL MCFSSampleInternal::BatchFileOperations_QueueInsertItem( ZHANDLE hIntOp , c
     }
 
     InternalWriteFileOperations* pWriteOperation = (InternalWriteFileOperations*)hIntOp;
-    if( pWriteOperation == NULL )
+    if( pWriteOperation == nullptr)
       return FALSE;
 
     pWriteOperation->AddItem(pItem, szWriteName);
@@ -610,7 +609,7 @@ BOOL MCFSSampleInternal::BatchFileOperations_Start( ZHANDLE hIntOp , DWORD& dwOp
   if( mode == BatchModePut)
   {
     InternalWriteFileOperations* pWriteOperation = (InternalWriteFileOperations*)hIntOp;
-    if( pWriteOperation == NULL )
+    if( pWriteOperation == nullptr)
       return FALSE;
 
     pWriteOperation->StartFileOperations(&m_MemFS);
@@ -621,10 +620,10 @@ BOOL MCFSSampleInternal::BatchFileOperations_Start( ZHANDLE hIntOp , DWORD& dwOp
   else if (mode == BatchModeGet)
   {
     InternalReadFileOperations* pReadOperations = (InternalReadFileOperations*)hIntOp;
-    if( pReadOperations == NULL )
+    if( pReadOperations == nullptr)
       return FALSE;
 
-    DWORD dwErrors = pReadOperations->WriteQueuedItemsToDisk();
+    const DWORD dwErrors = pReadOperations->WriteQueuedItemsToDisk();
     if (dwErrors != ERROR_SUCCESS)
     {
       m_nLastError = dwErrors;
@@ -641,7 +640,7 @@ BOOL MCFSSampleInternal::BatchFileOperations_Start( ZHANDLE hIntOp , DWORD& dwOp
 
 BOOL MCFSSampleInternal::BatchFileOperations_Release( ZHANDLE hIntOp )
 {
-  InternalFileOperation* pFileOperation = (InternalFileOperation*)hIntOp;
+  const InternalFileOperation* pFileOperation = (InternalFileOperation*)hIntOp;
   if( pFileOperation )
     delete pFileOperation;
     
