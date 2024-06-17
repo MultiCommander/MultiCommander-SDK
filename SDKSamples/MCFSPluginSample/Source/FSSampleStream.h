@@ -18,13 +18,13 @@ public:
    static bool GetExtensionInfo( DLLExtensionInfo* pInfo );
    
    MCFSSampleStream();
-   ~MCFSSampleStream();
+   virtual ~MCFSSampleStream();
 
    char* Get_ModuleID() override { return m_GuidString; }
 
    long PreStartInit(IMultiAppInterface* pInterface) override;
 
-   bool  GetIcon(HICON* pIcon, const WCHAR* fileExtension, MCIconSize::MCIconSize iconSize) override;
+   bool  GetIcon(HICON* pIcon, const WCHAR* fileExtension, MCIconSize iconSize) override;
    DWORD GetSupportedOperations() override;
    bool  IsBusy() override;
    BOOL CreateVolume(const WCHAR* szVolume, const WCHAR* szMountPath = NULL, eVCREATE_MODE nCreateMode = VCM_NEW, VolumePackOptions* pOptions = NULL, DWORD nItemHint = 0) override;
@@ -61,8 +61,8 @@ public:
    BOOL Exists( const WCHAR* szPath ) override;
 
   BOOL Makedir( const WCHAR* szPath , const FILETIME* pFileTime = NULL, DWORD dwExecuteOptions = 0 /* EXO_ */) override;
-  BOOL MoveFile( const WCHAR* strExistingFile , const WCHAR* strNewFilename, DWORD dwExecuteOptions  /* EXO_ */) override;
-  BOOL DeleteFile( const WCHAR* strExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) override;
+  BOOL MoveItem( const WCHAR* strExistingFile , const WCHAR* strNewFilename, DWORD dwExecuteOptions  /* EXO_ */) override;
+  BOOL DeleteItem( const WCHAR* strExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) override;
 
   UINT64 GetAttributes( const WCHAR* szFilename ) override; // return INVALID_FILE_ATTRIBUTES if strFilename does not exists on volume.
   BOOL  SetAttributes( const WCHAR* szFilename , UINT64 dwAttribute, DWORD dwExecuteOptions /* EXO_ */) override;
@@ -80,8 +80,8 @@ public:
 
   DWORD ExtractFile( const WCHAR* szFilename , const WCHAR* szWritePath, DWORD dwFlags = 0 ) override;  // VSO_NOMEMBUFFER 
 
-  IRWFile* CreateFile( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes = 0 , DWORD dwRWFlags = 0 , const FILETIME* ftFileTime = NULL , INT64 nFileSize = 0) override;
-  BOOL     CloseFile(IRWFile *pIFile, bool bAbort) override;
+  IRWFile* CreateItem( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes = 0 , DWORD dwRWFlags = 0 , const FILETIME* ftFileTime = NULL , INT64 nFileSize = 0) override;
+  BOOL     CloseItem(IRWFile *pIFile, bool bAbort) override;
 
   DWORD GetOptionalFunctions() override; // IVF_xxxxx
 
@@ -100,6 +100,8 @@ public:
   BOOL    BatchFileOperations_Start( ZHANDLE hIntOp , DWORD &dwOptions, MCNS::OverwriteOption& owOption, BatchMode mode) override;
   BOOL    BatchFileOperations_Release( ZHANDLE hIntOp ) override;
 
+  bool NeedParseContent() override;
+
 
   static void MemFSClear()
   {
@@ -111,7 +113,9 @@ protected:
   IRWFile* CreateFileRead( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 nFileSize /*= 0*/ );
 
   void ResetLastError();
-  static char  m_GuidString[34];
+
+ protected:
+   static char  m_GuidString[34];
   std::wstring m_strMountPath;
 
   DWORD m_nLastError;

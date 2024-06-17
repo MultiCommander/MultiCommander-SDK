@@ -32,6 +32,7 @@ class IAppMenu;
 class __declspec(novtable) IPluginInterface
 {
 public:
+  virtual ~IPluginInterface() = default;
   // MultiApp is Initialized
   virtual long PreStartInit(  IMultiAppInterface* pInterface )= 0;
 

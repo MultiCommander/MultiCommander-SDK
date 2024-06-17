@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2000-2016 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * 
@@ -25,12 +25,24 @@ MCNSBEGIN
   ZHANDLE hConfigRoot = pConfig->GetConfigElement( NULL ,  L"config" );
   pConfig->GetConfigValue(hConfigRoot, L"setting1", L"value", szValue1, _countof(szValue1));
 */
+
+struct FontAndIconSettings
+{
+  wchar_t szFontName[100];
+  long fontStyle = 0;
+  int fontSize = 0;
+  int cxIconSize = 0;
+};
+
+
 class IAppConfig
 {
 public:
 
   virtual ZHANDLE  OpenConfig( long ModuleID = -1 , BOOL bSet = TRUE , BOOL bGetConfigElement = TRUE) = 0;
   virtual BOOL     CloseConfig( ZHANDLE hHandle ) = 0;
+
+  virtual bool     VerifyConfig() = 0;
 
   // Validate existance of a config file, The path MUST be under the MC config path or the "restore" default file will not work
   virtual bool     ValidateExistence(const wchar_t* szFilename, bool bRestoreIfMissing) = 0;
@@ -46,7 +58,7 @@ public:
   virtual ZHANDLE  CreateConfigElement( ZHANDLE hParent , const WCHAR* strElement ) = 0;
   virtual bool     RemoveConfigElement( ZHANDLE hElement ) = 0;
 
-  virtual ZHANDLE  GetConfigElement( ZHANDLE hHandle , const WCHAR* strElement , bool bCreate = false ) = 0;
+  virtual ZHANDLE  GetConfigElement( ZHANDLE hHandle , const WCHAR* strElement , bool bCreate = false, bool bSilent = false) = 0;
   virtual ZHANDLE  GetNextElement( ZHANDLE hHandle , const WCHAR* strElement ) = 0;
 
   virtual BOOL     GetConfigText( ZHANDLE hHandle , const WCHAR* strElement , WCHAR* strOut , long lstrSize ) = 0;
@@ -67,6 +79,8 @@ public:
   virtual bool     SetConfigValue(ZHANDLE hHandle , const WCHAR* strElement , const WCHAR* strName , DWORD nValue , bool bCreate = false ) = 0;
   virtual bool     SetConfigValue(ZHANDLE hHandle , const WCHAR* strElement , const WCHAR* strName , INT64 nValue , bool bCreate = false ) = 0;
   virtual bool     SetConfigValue_CR(ZHANDLE hHandle , const WCHAR* strElement , const WCHAR* strName , COLORREF nColorRef , bool bCreate = false ) = 0;
+
+  virtual bool GetExplorerPanelFontAndIconSettings(MCNS::FontAndIconSettings* pFontAndIcon) = 0;
 
 };
 MCNSEND

@@ -77,10 +77,12 @@ MCNSBEGIN
 #define ZCV_MULTILISTVIEW         500  // MultiList view
 #define ZCV_FILESYSTEMBROWSERVIEW 600  // FileSystemBrowser View
 #define ZCV_FOLDERTREEVIEW        610  // FolderTree view
-#define ZCV_FILEWORKSPACEVIEW     650  // FileWorkspace view
+//#define ZCV_FILEWORKSPACEVIEW     650  // FileWorkspace view
+#define ZCV_PREVIEWVIEW           660  // Data Preview view
 
 #define ZCV_TOOLBAR               700  // A Toolbar view
 #define ZCV_COMMANDBAR            710  // A Commandbar view
+#define ZCV_COMMANDBARS           711  // A Commandbars view
 #define ZCV_STATUSBAR             750  // Status Bar (also used as area to place other UI components on, like Buttons, texts, edit fields and so on)
 #define ZCV_DEVICEBAR             760  // Device bar (Shows button for devices)
 
@@ -125,6 +127,11 @@ MCNSBEGIN
 #define ZCP_TB_BORDER_TOP     0x00002000L // Add a Top Border
 #define ZCP_TB_BORDER_3D      0x00004000L // 3D Boarder
 #define ZCP_TB_FLAT           0x00008000L // Flat Style
+
+// ZCV_COMMANDBARS
+#define ZCP_CMDB_FIXED_HEIGHT      0x00001000L // The commandbars controller will have a fixed height.
+#define ZCP_CMDB_SINGLEROW         0x00002000L // Do not split into multiple rows if all items do not fit on one row. items that does not fit will not be drawn
+#define ZCP_CMDB_NO_HOVEREFFECT    0x00004000L // Draw no hover over effect
 
 // ZCV_SPLITTERVIEW - Style flags
 #define ZCP_FIXEDSIZE       0x00010000L // This active splitter view will not be resizeable
@@ -393,6 +400,34 @@ MCNSBEGIN
 
 #define ZFVX_EXPANEL_ROW    60  // Explorer Panel - Row No
 
+// System.Document.*
+#define ZFVX_DOCUMENT_AUTHOR    70
+#define ZFVX_DOCUMENT_TITLE     71
+
+#define ZFVX_DOCUMENT_CHARCOUNT 72
+#define ZFVX_DOCUMENT_WORDCOUNT 73
+#define ZFVX_DOCUMENT_LINECOUNT 74
+#define ZFVX_DOCUMENT_PARACOUNT 75
+#define ZFVX_DOCUMENT_PAGECOUNT 76
+
+#define ZFVX_DOCUMENT_DATECREATED 77
+#define ZFVX_DOCUMENT_DATEPRINTED 78
+#define ZFVX_DOCUMENT_DATESAVED   79
+#define ZFVX_DOCUMENT_LAST_ID  79
+
+#define ZFVX_CLOUD_STATE       85
+#define ZFVX_CLOUD_STATE_ATTRIB 86
+
+// Custom script columns
+#define ZFVX_SCIPTCOL_1  100
+#define ZFVX_SCIPTCOL_2  101
+#define ZFVX_SCIPTCOL_3  102
+#define ZFVX_SCIPTCOL_4  103
+#define ZFVX_SCIPTCOL_5  104
+#define ZFVX_SCIPTCOL_6  105
+#define ZFVX_SCIPTCOL_LAST 105
+
+
 // Filemanager column Flags
 #define ZFV_CF_NONE             0x0000
 #define ZFV_CF_OVERDRAW         0x0200 // this column should overdraw if next column text is empty
@@ -444,8 +479,13 @@ MCNSBEGIN
 #define AM_GETAUTOLOADPARAM 20006 // param1 and param2 are 2 sting that modules can file with some value.. MAX 2048 WCHAR big..
 #define AM_POSTSTART        20007
 #define AM_AUTOLOAD         20010 // Module is requested to auto load.. So do your autoload stuff
+#define AM_READY            20011 // Init and autoload is completed and UI can now be shown.
+
+#define AM_GETRECOVERYRESTARTDATA 20015 // 
+
 #define AM_SYSCOLORCHANGE   20020 // System colors have change so update colors on UI if needed.
 #define AM_TABPANEL_CHANGE  20025 // a HWND located inside a tab for the Extension has change TabPanel. wParam is the HWND, lParam is the new panel.
+#define AM_TABPANEL_ACTIVE  20026
 
 #define AM_FRAMEWNDCLOSING  20309 // return FALSE to abort closing
 #define AM_FRAMEWNDCLOSE    20310 // A FrameWnd was Closed.. Now clean up all you interfaces and handles to controller you put into that frame
@@ -453,7 +493,7 @@ MCNSBEGIN
                                   // This message will be sent from the NEW UI thread. So be carefull what you do when act on it.
 
 #define AM_CONTEXTMENU      20450 // Command from the application contextmenu (like tab menu)
-#define AM_SHOWCMDCONTEXTMENU  20455 // A Command request that a Context Menu to be shown. (See TBBTN_MODULE_CONTEXTMENU flag for InsertButton for Toolbarinterface )
+#define AM_SHOWCMDCONTEXTMENU  20455 // A Command request that a Context Menu to be shown. (See TBBTN_MODULE_CONTEXTMENU flag for InsertButton for Toolbarinterface/CommandBar interface )
 #define AM_COMMANDUI        20500 // CommandUI. lParam is the MESSAGEID , wParam is a DWORD* that you enter return value into.
 #define AM_SECUI_COMMAND    20600 // Command sent from Secondary UI thread. When extension get this command be aware that you are now NOT running in the main thread.
 
@@ -502,6 +542,7 @@ MCNSBEGIN
 #define AM_VIEW           21151 // View file. (Will only be sent if a module is registered as a viewer )
 #define AM_EDIT           21152 // Edit file (Will only be sent if a module is registered as a editor)
 #define AM_VIEWEX         21153
+#define AM_SHOWPREVIEW    21160 // Show preview of file in focus. sent to registered preview handler. (wparam = true for show in right panel, lparam wchar* for filepath to file in focus)
 
 // Notification Message.. this message might be handled or not.
 // ComboBox Changed
@@ -509,12 +550,14 @@ MCNSBEGIN
 #define NM_DEVCMB_CHANGED     21201 // Device ComboBox Changed , wParam = DeviceItem handle, lParam = Index of selected item
 #define NM_EDIT_OKCANCEL      21202 // User pressed return or esc. ( see lparam 1 if escape )
 #define NM_EDIT_CHANGED       21203 // Text in Edit ctrl have changed
+#define NM_MODBASE            21400 // base ID for module based notifications
 
 #define AM_SETTINGS_CHANGED             21500 // Settings have been changed.. Please Reload settings (Will be sent to ALL instances of the extension)
 #define AM_SETTINGS_CHANGED_SHARED      21501 // (Sent before AM_SETTINGS_CHANGED is sent) Settings have been changed.. Please Reload settings (Will be sent only to the FIRST instance of the extension, Used to update shared settings for all instances of that extension)
 #define AM_SETTINGS_CHANGED_SHARED_POST 21502 // Same as AM_SETTINGS_CHANGED_SHARED but are sent AFTER all the AM_SETTINGS_CHANGED have been sent.
 #define AM_SETTINGS_CHANGED_TABCOLORS  21503 
 #define AM_KEYS_CUSTOMIZED          21510 // User has customized keys. update your hotkeys.
+#define AM_NOTIFICATION             21515 // WPARAM Notification Code, and lParam module specific Param
 #define AM_ADDCOLUMNTOVIEW          21700 // Add a column to view.  WPARAM is a pointer to a wchar_t with the column name.
 #define AM_REMOVECOLUMNFROMVIEW     21701 
 #define AM_RESETCOLUMNSINVIEW       21702

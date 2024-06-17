@@ -1,24 +1,10 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2000-2016 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * IVolume - Interface to inherit from when creating a FileSystem Plugin
- * 
- * 
- * Changes
- * ---------------------
- * 2014-05-15 - Added - Constant IVF_STORAGEINFO
- *                      IVolume::GetStorageInformation(...)
- * 2014-03-28 - Added - Constant VINTDEL_DELBEFOREREPLACE
- * 2014-03-22 - Added - IVolume::SetPassword / IVolume::GetPassword
- * 2013-11-19 - Added - FSEXECUTE_ASYNC_UITHREAD / FSEXECUTE_ASYNC_WORKTHREAD
- * 2013-11-03 - Change- Change IconSize contants to MCIconSize enum
- * 2013-10-31 - Added - Medium and XLarge icon size contants VFICON_MEDIUM/VFICON_XLARGE
- * 2013-10-10 - Added   OnConfigureSettings(IMultiAppInterface* pInterface) 
- * 2013-10-10 - Added   OnSettingsChanged(IMultiAppInterface* pInterface) 
- * 2013-07-01 - Public Release
  * 
  * 
  **/
@@ -59,15 +45,15 @@ class IVolumeCommandResult;
 #define VC_TRUNCATE_EXISTING   5
 
 // Seek Flags
-#define VSEEK_FILE_BEGIN  0
+#define VSEEK_FILE_BEGIN    0
 #define VSEEK_FILE_CURRENT  1
-#define VSEEK_FILE_END    2
+#define VSEEK_FILE_END      2
 
-// dwExecuteOptions Flags in Many of the call.
-#define EXO_ISFILE               0x00000001 // Referenced file is a file   ( Only used by the DeleteFile(...) Api )
-#define EXO_ISFOLDER             0x00000002 // Referenced file is a folder ( Only used by the DeleteFile(...) Api )
-#define EXO_ISREPARSEPOINT       0x00000008 // Referenced file is a ReparsePoint. So file mkight need to be opended with that flag
-#define EXO_EXTRALONGPATHALLOWED 0x00000100 // Allow extra long if supported. ( User have given Ok for extra long path )
+// dwExecuteOptions Flags in many of the call.
+#define EXO_ISFILE               0x00000001 // Referenced file is a file   ( Only used by the DeleteItem(...) Api )
+#define EXO_ISFOLDER             0x00000002 // Referenced file is a folder ( Only used by the DeleteItem(...) Api )
+#define EXO_ISREPARSEPOINT       0x00000008 // Referenced file is a ReparsePoint. So file might need to be opended with that flag
+#define EXO_EXTRALONGPATHALLOWED 0x00000100 // Allow extra long if supported. ( User have given OK for extra long path )
 #define EXO_ASADMIN              0x80000000 // Run this command as administrator if possible
 
 // Return result flags for Execute(...)
@@ -91,6 +77,7 @@ class IVolumeCommandResult;
 // Then when showing it in the filebrowser, No icon will will be shown since it is not files. 
 // So if file items are Virtual and This flag is set on the volume then the volume will be able to 
 // provide a ICON.. both HICON and a Icon Matcher. 
+
 #define IVF_EXECUTEFILE      0x00000008  // IVolume->Execute(..) supported
 #define IVF_CONNECT          0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP Volume)
 #define IVF_ASSIGN2NUMDEVICE 0x00000020  // Auto Assign device to a Num Device ( 0: -> 9: ) (Require IVG_CONNECT to )
@@ -129,6 +116,7 @@ class IVolumeCommandResult;
 
 // Modify content support
 #define VSO_CREATENEW         0x00000100 // Volume supports Creation of new file item/add file to archive
+// VSO_CREATENEWEX -- See below
 #define VSO_DELETE            0x00000200 // Volume supports Delete operations. (VSO_DIRECT_DELETE or VSO_BATCH_DELETEITEMS must also be set)
 #define VSO_MKDIR             0x00000400 // Volume supports Create Folder operations
 #define VSO_RENAME            0x00000800 // Volume supports Rename operations
@@ -146,7 +134,7 @@ class IVolumeCommandResult;
 // since they will be created automatically by the volume
 // (Require that VSO_BATCH_INSERTITEMS also is set )
 
-#define VSO_CHK_OWRITE        0x00040000 // Volume support overwrite of item. If not then files that need to be overwriten will first be deleted when copied.
+#define VSO_CHK_OWRITE        0x00040000 // Volume support overwrite of item. If not then files that need to be overwriten will first be deleted then copied. (Eg Zip, Delete item from zip before adding the replacment)
 #define VSO_NOUPDIR           0x00080000 // ".." folder is NOT returned from this volume. This flag makes the system add it by it self
 
 #define VSO_NOMEMBUFFER       0x00100000 // This volume does only support read's operation to be written to file, not to a memory buffer 
@@ -158,7 +146,8 @@ class IVolumeCommandResult;
 // Eg Read from one Zip and Write to another zip. Then the read does not need to Unpack the data, but can read the raw zip data for that file entry
 // and insert it into the target zip.
 
-#define VSO_SLOW              0x00400000 // Volume is slow. When doing copy/move operation the path will not be requested to be updated after every change.
+#define VSO_SLOW              0x00400000 // Volume is slow. 
+// When doing copy/move operation the path will not be requested to be updated after every change.
 // update will happen after file operation is completed.
 
 #define VSO_BATCH_TARGETLOCAL 0x00800000 // Use Batch method for copy if target volume is Local filesystem, AND we got multiple items are in queue.
@@ -177,13 +166,23 @@ class IVolumeCommandResult;
 #define VSO_RUNASADMIN_INTERNAL_COPY  0x04000000 // If source and target are the same modules.. (eg both is REG: ) then use direct copy operation.
 // BUT only if RetryAsAdmin has been requested.
 
+#define VSO_IS_FILEARCHIVE 0x10000000 // Volume is a file archive. Stored file inside a file (Zip, rar, 7zip, and so on, virtual devices like FTP, WPD is NOT this )
+
+#define VSO_CREATENEWCTX     0x20000000 // Volume supports Creation of new file item using CreateItemContext
 // Not used yet - For future support
-#define VSO_READ_PASSWORD      0x10000000  // Volume support Password for reading (unpacking) items. (eg. password protected Zip, 7Zip archive for example)
-#define VSO_WRITE_PASSWORD     0x20000000  // Volume support Password for writing (packing) items. (eg. password protected Zip, 7Zip archive for example)
+//#define VSO_READ_PASSWORD      0x10000000  // Volume support Password for reading (unpacking) items. (eg. password protected Zip, 7Zip archive for example)
+//#define VSO_WRITE_PASSWORD     0x20000000  // Volume support Password for writing (packing) items. (eg. password protected Zip, 7Zip archive for example)
 
 #define VSO_FREESPACE_NOTAVAIL 0x40000000  // Free space information is not available for this volume
 // Only valid if you have a Volume that is connected to a device like FTP:, REG: or somethings.
 // 
+//===========================================================================================================
+
+// Volume overwrite support
+#define VOW_APPEND   0x00000001L // Append to existing file
+#define VOW_RENAME   0x00000002L // Rename existing file
+#define VOW_RESUME   0x00000004L // Resume existing file
+
 //===========================================================================================================
 
 // OBOSLETE:.. MCIconSize used instead
@@ -203,7 +202,8 @@ enum eVOPEN_MODE
 };
 
 // Volume Open Flags
-#define VOF_PARSECONTENT  0x00000001L // Content must be parsed when Open returns.
+#define VOF_PARSECONTENT          0x00000001L // Content must be parsed when Open returns.
+#define VOF_IGNOREBROWSERERRORS   0x00000002L // Ignore browse errors. This error was found when we browsed recently. do not bug users about it again
 
 //
 // Flag for CREATING a Volume. eg. creating a .ZIP
@@ -311,15 +311,28 @@ VOM_BROWSE    OK      OK      OK      S/V = Sharing violation error
 #define VINTDEL_DELBEFOREREPLACE 0x20000000L // Hint that this delete operation is Becuse of a delete before replace (Since the volume did not support replace)
 
 // File Operation result
-enum FileOpErrorResult
+enum FileOperationResult : int
 {
-  FOR_OK        = 0,
+  FOR_NOTSET    = 0,
+  FOR_OK        = 1,
   FOR_UNKNOWN   = 2,
   FOR_SKIPPED   = 10,
+  FOR_SKIPPED_DELFORMOVE = 11, // Skipped the delete of source file for move operation
   FOR_OVERWRITE = 20,
-  FOR_RENAMED   = 25,
-  FOR_ABORTED   = 50,
-  FOR_TESTFAILED = 60, // Test Operation Failed
+  /*
+  FOR_OVERWRITE_IF_NEWER = 21, // This are just the decicend for WHY it was overwritten.. 
+  FOR_OVERWRITE_IF_OLDER = 22,
+  FOR_OVERWRITE_IF_LARGER = 23,
+  FOR_OVERWRITE_IF_SMALLER = 24,
+  FOR_OVERWRITE_SIZE_DIFF = 25,
+  */
+  FOR_OVERWRITE_KEEPBOTH_RENAME_NEW = 25,
+  FOR_OVERWRITE_KEEPBOTH_RENAME_OLD = 25,
+  FOR_RENAMED   = 30,
+  FOR_DELETED   = 35,
+  FOR_ABORTED   = 40,
+  FOR_FAILED    = 50, // See ResultError for error code
+  FOR_TESTFAILED = 100, // Test Operation Failed
 };
 
 enum BatchMode
@@ -365,31 +378,56 @@ public:
 struct FileOperationErrorContext
 {
 public:
-  
-  // DO NOT FORGET TO CALL pSourceFile->Release(); else memeory leak
+  ~FileOperationErrorContext()
+  {
+    if(pSourceFile)
+    {
+      pSourceFile->Release();
+      pSourceFile = nullptr;
+      
+    }
+    if(pTargetFile)
+    {
+      pTargetFile->Release();
+      pTargetFile = nullptr;
+    }
+  }
+
+  // DO NOT TO CALL pSourceFile->Release(); will be called in destructor
   MCNS::IFileInfo* pSourceFile = nullptr; 
 
-  // DO NOT FORGET TO CALL pTargetFile->Release(); else memeory leak
+  // DO NOT TO CALL pSourceFile->Release(); will be called in destructor
   MCNS::IFileInfo* pTargetFile = nullptr; 
 
   DWORD ErrorCode = VERROR_UNKNOWN_ERROR;
+
+  // Replace this with MCNS::FileOpErrorResult 
   DWORD Response = ED_ABORT;
+  MCNS::FileOpErrorResult ErrorResult = MCNS::FileOpErrorResult::NotProcessed;
+
   MCNS::OverwriteOption owOption = MCNS::OverwriteOption::Ask;
 
-  // if error was file alredy exists and user selected an overwrite option that require processing
+  // if error was 'file alredy exists' and user selected an overwrite option that require processing
   OverwriteResult ProcessedOvewriteResult = OverwriteResult::NotProcessed; // 0 do not overwrite, 1 overwrite. -1 no processing done
-  bool AllowInternalOverwriteEvaluation = true; // If pSourceFile and pTargetFile is not complete set to false, if true file properties will be evaulated and ProcessedOvewriteResult will be set 
+  bool AllowInternalOverwriteEvaluation = true; // If pSourceFile and pTargetFile is not complete set to false, if true file properties will be evaluated and ProcessedOverwriteResult will be set 
 
   bool AllowRename = false;
   bool AllowAppend = false;
   bool AllowResume = false;
+
+  // Enables the "Retry Opening file shared" option - Applicable for VERROR_SHARING_VIOLATION error encountered while opening a file for reading.
+  // This situation can occur if the file is already open in WRITE mode. (Note: This might not be ideal as the file could be currently written to.)
+  bool AllowRetrySharedOpening = false; 
   bool Reserved1 = false;
+  MCNS::FileOpErrorHint ErrorHint = MCNS::FileOpErrorHint::NoHint;
+  DWORD_PTR RefId = 0;
 };
 
-// If FileSystem Interface is supporting Stream Read/Write then this is returned from IVolume::CreateFile
+// If IVolume Interface is supporting Stream Read/Write then this is returned from IVolume::CreateFile
 class __declspec(novtable) IRWFile
 {
 public:
+  virtual  ~IRWFile(){}
   virtual BOOL WriteFile( LPVOID lpBuffer , DWORD nBytesToWrite , LPDWORD lpBytesWritten ) = 0;
 
   // write cached data if any exists. this is called after all normal WriteFile(..) calls to let the file know that no more data should be written
@@ -448,14 +486,30 @@ public:
 class __declspec(novtable) IVolumeFindCallback
 {
 public:
+  virtual      ~IVolumeFindCallback() = default;
+
+  // Use this to get access to logging, show error dialog and so on. Not all interfaces are valid from file scanning. (Progress() will return nullptr)
   virtual bool AbortRequested() const = 0;
-  virtual void ItemsFound(size_t nItems) = 0; // set found items 
-  virtual void ItemsFoundInc() = 0; // increment found items with +1
+  virtual void ItemsFound(const size_t nItems) = 0; // set found items 
+  virtual void ItemsFoundInc() = 0;           // increment found items with +1
   
 };
 
 #pragma warning( push )
 #pragma warning( disable : 4100 ) // warning C4100: '<parameter>' : unreferenced formal parameter
+
+struct CreateItemContext
+{
+  const wchar_t* szFilename = nullptr;
+  DWORD dwAccessMode = 0;
+  DWORD dwCreateMode = 0;
+  UINT64 dwAttributes = 0;
+  DWORD dwRWFlags = 0;
+  const FILETIME* ftlastModified = nullptr;
+  const FILETIME* ftLastAccess = nullptr;
+  const FILETIME* ftCreate = nullptr;
+  UINT64 FileSize = 0;
+};
 
 class __declspec(novtable) IVolume
 {
@@ -466,8 +520,6 @@ public:
     m_nRef = 0;
     m_nVolumeID = 0;
     m_nOpenMode = VOM_BROWSE;
-    m_pStatusHandler = NULL;
-    m_pGUICallback   = NULL;
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -486,16 +538,13 @@ public:
   { 
     return m_nRef;
   }
-  
-  void  SetStatusHandler( IStatusHandler* pStatus )  { m_pStatusHandler = pStatus; }
-  void  SetGUICallback( IGUICallback* pGUICallback ) { m_pGUICallback = pGUICallback; }
-  IStatusHandler* GetStatusHandler() { return m_pStatusHandler; }
-  IGUICallback*   GetGUICallback()   { return m_pGUICallback;   }
 
-  short GetVolumeID() { return m_nVolumeID; }
+  void  SetApplicationConnection(IAppConnection* pAppConnection) { m_pAppConnection = pAppConnection; }
+  
+  short GetVolumeID() const { return m_nVolumeID; }
   void  SetVolumeID( short nVolumeID ) { m_nVolumeID = nVolumeID; }
 
-  int   GetOpenMode(){ return m_nOpenMode; }
+  int   GetOpenMode() const { return m_nOpenMode; }
 
   //////////////////////////////////////////////////////////////////////////
   // Override this and return GUID
@@ -505,6 +554,9 @@ public:
 
   // Called once during startup. Load your config and store that in a singleton. since this instance will be deleted after the call
   virtual long PreStartInit(IMultiAppInterface* /*pInterface*/) { return 0; }
+
+  // Only use PostStartInit if you need to init things from the Main UI thread.. else use PreStartInit
+  virtual long PostStartInit(IMultiAppInterface* /*pInterface*/) { return 0; }
 
   virtual DWORD DataBuffertWriteAlignment(const WCHAR* szPath = nullptr) { return 0; }
 
@@ -578,13 +630,13 @@ public:
 
   // DO NOT keep a copy of the pOptions pointer. it will be invalid after the function return.
   // extract the options you need from it 
-  virtual BOOL CreateVolume(const WCHAR* szVolume, const WCHAR* szMountPath = NULL, eVCREATE_MODE nCreateMode = VCM_NEW, VolumePackOptions* pOptions = NULL, DWORD nItemHint = 0) = 0;
+  virtual BOOL CreateVolume(const WCHAR* szVolume, const WCHAR* szMountPath = nullptr, eVCREATE_MODE nCreateMode = VCM_NEW, VolumePackOptions* pOptions = nullptr, DWORD nItemHint = 0) = 0;
 
   // Test a volume of this type. eg a Zip file ?
   // use the IProgress to return the progress of the test
   // dwResult is the result of the test  VERROR_FILE_CORRUPT , or other VERROR code
   // return : TRUE if test been preformed. FALSE of not.. (If test Fails return TRUE. becuse a TEST has been done. )
-  virtual BOOL TestVolume(const WCHAR* /*szVolume*/, IProgress* /*pProgress*/, DWORD& /*dwResult*/) { return FALSE; }
+  virtual BOOL TestVolume(const WCHAR* /*szVolume*/, IFileOperationExtensionContext* /*pContext*/, DWORD& /*dwResult*/) { return FALSE; }
 
   /*
   BOOL Open(const WCHAR* szVolume , const WCHAR* szMountPath = NULL , eVOPEN_MODE nOpenMode = VOM_READ, DWORD dwFlags = 0)
@@ -604,13 +656,16 @@ public:
 
   dwFlags = Volume Open Flags.  VOF_PARSECONTENT (Must parse content if not parsed, else content might be parsed when data is required)
   */
-  virtual BOOL Open(const WCHAR* szVolume , const WCHAR* szMountPath = NULL , eVOPEN_MODE nOpenMode = VOM_READ, DWORD dwFlags = 0) = 0;
+  virtual BOOL Open(const WCHAR* szVolume , const WCHAR* szMountPath = nullptr, eVOPEN_MODE nOpenMode = VOM_READ, DWORD dwFlags = 0) = 0;
 
   // nOverrideMode is to Reopen to nOpenMode even if CurrentMode is nOrverrideMode
   virtual BOOL ReOpen(int nOpenMode , int nOverrideMode = 0, DWORD dwOpenFlags = 0) = 0;
 
   // Close volume. Unpack/Disconnect
   virtual BOOL Close() = 0;
+
+  // Needs a call to open with VOF_PARSECONTENT
+  virtual bool NeedParseContent() = 0;
 
   // Not Used.. I Think... Remove this
   virtual BOOL isOpen() = 0;
@@ -637,12 +692,12 @@ public:
   //           but a valid ZHANDLE should be returned so that the items that is did parse can be shown. (if possible)
   // pCount - is number of items founds. It do not need to be the same as the no of item that will be shown when finished.
   //          it is used to inform the user that something is happening. And that we are working
-  virtual ZHANDLE InitFind( const WCHAR* szPath , const WCHAR* szPattern = NULL , DWORD dwFlags = 0, IVolumeFindCallback* pFindCallback = nullptr) = 0;
+  virtual ZHANDLE InitFind( const WCHAR* szPath , const WCHAR* szPattern = nullptr, DWORD dwFlags = 0, IVolumeFindCallback* pFindCallback = nullptr) = 0;
 
   // Find Next Item in Scan
   // Set pItem with filedata the same way that is done in SetFileData.
   // BUT only if pItem is valid. IT CAN BE NULL so do a NULL check. return TRUE if there is a new item. (even if pItem is NULL)
-  virtual BOOL FindNext( ZHANDLE h ,  /*[out]*/ IFileItem *pItem = NULL ) = 0;
+  virtual BOOL FindNext( ZHANDLE h ,  /*[out]*/ IFileItem *pItem = nullptr) = 0;
 
   // dwAttribute only needs basic attributes like ZFF_HIDDEN , ZFF_SYSTEM
   // used to skip Hidden,system item
@@ -656,18 +711,17 @@ public:
   // check if file/path exists in this volume
   virtual BOOL Exists( const WCHAR* szPath ) = 0;
 
-  virtual BOOL Makedir( const WCHAR* szPath , const FILETIME* pFileTime = NULL, DWORD dwExecuteOptions = 0 /* EXO_ */) = 0;
+  virtual BOOL Makedir( const WCHAR* szPath , const FILETIME* pFileTime = nullptr, DWORD dwExecuteOptions = 0 /* EXO_ */) = 0;
 
   // Move/Rename a file/folder on current volume
-  virtual BOOL MoveFile( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions  /* EXO_ */) = 0;
+  virtual BOOL MoveItem( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions  /* EXO_ */) = 0;
 
   // call if VSO_INTERNAL_COPY or VSO_RUNASADMIN_INTERNAL_COPY is set
   virtual BOOL CopyItem( const WCHAR* szExistingName, const WCHAR* szTargetName, DWORD dwOptions, DWORD dwExecuteOptions = 0) { return FALSE; }
 
   // Delete file
   // set bFile to FALSE to strExistingFile is a folder
-  // TODO - Rename conflicts with Win MACRO for DeleteFile
-  virtual BOOL DeleteFile( const WCHAR* szExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) = 0;
+  virtual BOOL DeleteItem( const WCHAR* szExistingFile , DWORD dwExecuteOptions = EXO_ISFILE) = 0;
 
   // Get/Set file attribute
   // return INVALID_FILE_ATTRIBUTES if szFilename does not exists on volume.
@@ -693,10 +747,11 @@ public:
   dwAccessMode : VA_WRITE | VA_READ
   dwCreateMode : VC_CREATE_NEW , VC_CREATE_ALWAYS , VC_OPEN_EXISTING , VC_OPEN_ALWAYS , VC_TRUNCATE_EXISTING
   */
-  virtual IRWFile* CreateFile( const WCHAR* szrFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes = 0 , DWORD dwRWFlags = 0 , const FILETIME* ftFileTime = NULL , INT64 nFileSize = 0) = 0;
+  virtual IRWFile* CreateItem( const WCHAR* szrFilename, DWORD dwAccessMode, DWORD dwCreateMode, UINT64 dwAttributes = 0, DWORD dwRWFlags = 0, const FILETIME* ftFileTime = nullptr, INT64 nFileSize = 0) = 0;
+  virtual IRWFile* CreateItemEx(CreateItemContext& createItemContext) { return nullptr; }
 
   // bAbort is TRUE CloseFile is because of a UserRequested abort
-  virtual BOOL   CloseFile(IRWFile *pIFile, bool bAbort) = 0;
+  virtual BOOL   CloseItem(IRWFile *pIFile, bool bAbort) = 0;
 
   // Is called on Copy/Move if source / target is the same volume id. this is to better be able to prepare the write
   // operation. by checking local data IRWFile.  both pSource and pTarget is create by the same kind of IVolume. 
@@ -722,7 +777,7 @@ public:
 
   // if bReadCofig is FALSE then show Write Config
   // dwConfigValue is in/out value of config flags that can be changed by the dialog
-  virtual BOOL ShowConfigDlg( DWORD& dwConfigValue , BOOL bReadConfig = TRUE , BOOL* bSaveAsDefault = NULL ) = 0;
+  virtual BOOL ShowConfigDlg( DWORD& dwConfigValue , BOOL bReadConfig = TRUE , BOOL* bSaveAsDefault = nullptr) = 0;
 
   ///========================================================================================================
   // Internal Batch file operations methods. 
@@ -733,6 +788,7 @@ public:
   // dwFlags is FILEOP_ flags. That contains some user settings on how copy/move/delete should work
   // nBatchMode = 
   virtual ZHANDLE BatchFileOperations_Init(IProgress* /*pProgress*/, DWORD /*dwFlags*/ = 0, BatchMode /*mode*/ = BatchModePut) {  return (ZHANDLE)0; }
+  virtual ZHANDLE BatchFileOperations_Init2(IFileOperationExtensionContext* /*pFOEContext*/, DWORD /*dwFlags*/ = 0, BatchMode /*mode*/ = BatchModePut) { return (ZHANDLE)0; }
 
   // dwFlags = INTERNALOP_ flags - Hints in why the item is queue If it is for a Add/Delete/Extract reason.
   // dwWriteFlags - Write flags to use according to read/write strategy, Must not be used. only recommended flag. 
@@ -763,7 +819,7 @@ public:
   // Will be called if CreateFile return nullptr and error code is VERROR_OPEN_FAILED_BADPASSWORD
   // Error handling will then ask for password and call SetPassword.
   virtual void         SetPassword(const WCHAR* szPassword) { }
-  virtual const WCHAR* GetPassword() { return NULL;  }
+  virtual const WCHAR* GetPassword() { return nullptr;  }
 
   // Override and set add IVF_STORAGEINFO for Optional function support
   // Return free and avail space of the specified path
@@ -785,15 +841,17 @@ public:
   // nDataType  - Type of Data
   virtual int OnDrop(const WCHAR* szOverItem, IFileItemCollection* pDropItems, const BYTE* pData, DWORD nDataLen, DWORD dwDataType, DWORD& dwResultFlags) { return -1; }
 
+  // Return what overwrite support this volume supports.. VOW_APPEND, VOW_RENAME, VOW_
+  virtual DWORD GetOverwriteSupport() { return 0; }
+
 protected:
-  IStatusHandler* m_pStatusHandler;
-  IGUICallback*   m_pGUICallback;
+  IAppConnection* m_pAppConnection = nullptr;
 
   eVOPEN_MODE   m_nOpenMode;
 
   // DO NOT change the value of these your self.
-  DWORD         m_nRef;
-  short         m_nVolumeID;
+  DWORD         m_nRef = 0;
+  short         m_nVolumeID = 0;
 };
 
 #pragma warning( pop ) 

@@ -28,6 +28,8 @@ public:
   // Force a reload of path
   virtual void RescanPath(const WCHAR* szPath) = 0;
 
+  // Remove item from FileSystem Cache, and notify all views that the item is gone.
+  virtual void FileSystemItemRemoved(const WCHAR* szPath) = 0;
   /*
   virtual void	InvokeChange(const WCHAR* strPath, DWORD dwFlags) = 0;
 

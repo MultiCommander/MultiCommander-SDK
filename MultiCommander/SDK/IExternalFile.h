@@ -40,16 +40,23 @@ MCNSBEGIN
 #define VF_TRACKCHANGED 0x0001  // Only Update if temporary external file is changed
 #define VF_UPDATE       0x0002  // Update original file 
 #define VF_DELETE       0x0004  // Delete the temporary external file
+#define VF_DELETE_ALL   0x0008  // Delete all the files in the temp folder
 #define VF_DONT_ASK     0x0100  // Don't ask if it should replace 
 #define VF_SILENT       0x0200  
 #define VF_FINALTHREAD  0x1000  // Do the finalizing in separate thread
+#define VF_DONOTEXTRACTALL 0x2000
 
   //////////////////////////////////////////////////////////////////////////
 class __declspec(novtable) IExternalFile
 {
 public:
+  virtual ~IExternalFile() = default;
+
   // filepath to the external file. where it is temporary copied to.
   virtual bool	GetExternalFilename( WCHAR* strFilename, int nMaxLen);
+
+  // folder path to where external file is located
+  virtual bool	GetTempFolder(WCHAR* strFolder, int nMaxLen);
 
   // Original filepath reference
   virtual bool  GetRefFilename(WCHAR* szFilename, int nLen);

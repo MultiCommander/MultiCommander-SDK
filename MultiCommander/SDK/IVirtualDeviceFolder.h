@@ -21,7 +21,7 @@ class __declspec(novtable) IVirtualDeviceFolder
 public:
   virtual DWORD Count() = 0;
   virtual bool AddFileItem(MCNS::IFileItem* pFileItem) = 0;
-  virtual bool RemoveFileItem(const CZFileItem* pFileItem) = 0;
+  virtual bool RemoveFileItem(const MCNS::IFileItem* pFileItem) = 0;
   virtual bool IsChanged() = 0;
   virtual IFileItem* GetSubItem(int idx) = 0;
 

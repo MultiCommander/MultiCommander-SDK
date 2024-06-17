@@ -102,9 +102,9 @@ long MCFSSampleStream::PreStartInit( IMultiAppInterface* pInterface )
   return 0;
 }
 
-bool MCFSSampleStream::GetIcon(HICON* /*pIcon*/, const WCHAR* /*fileExtension*/, MCIconSize::MCIconSize /*iconSize*/)
+bool MCFSSampleStream::GetIcon(HICON* /*pIcon*/, const WCHAR* /*fileExtension*/, MCIconSize /*iconSize*/)
 {
-  return 0;
+  return false;
 }
 
 DWORD MCFSSampleStream::GetSupportedOperations()
@@ -326,7 +326,7 @@ BOOL MCFSSampleStream::Makedir( const WCHAR* szPath , const FILETIME* pFileTime 
 }
 
 // Rename is also using this
-BOOL MCFSSampleStream::MoveFile( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions /* EXO_ */ )
+BOOL MCFSSampleStream::MoveItem( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions /* EXO_ */ )
 {
   UNREFERENCED_PARAMETER(dwExecuteOptions);
 
@@ -366,7 +366,7 @@ BOOL MCFSSampleStream::MoveFile( const WCHAR* szExistingFile , const WCHAR* szNe
   return FALSE;
 }
 
-BOOL MCFSSampleStream::DeleteFile( const WCHAR* szExistingFile , DWORD dwExecuteOptions /*= EXO_ISFILE*/ )
+BOOL MCFSSampleStream::DeleteItem( const WCHAR* szExistingFile , DWORD dwExecuteOptions /*= EXO_ISFILE*/ )
 {
   UNREFERENCED_PARAMETER(dwExecuteOptions);
 
@@ -488,7 +488,7 @@ DWORD MCFSSampleStream::ExtractFile( const WCHAR* szFilename , const WCHAR* szWr
   return 0;
 }
 
-IRWFile* MCFSSampleStream::CreateFile( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 nFileSize /*= 0*/ )
+IRWFile* MCFSSampleStream::CreateItem( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 nFileSize /*= 0*/ )
 {
   ResetLastError();
   szFilename = RemoveDeviceFromPath(szFilename);
@@ -571,7 +571,7 @@ IRWFile* MCFSSampleStream::CreateFileRead( const WCHAR* szFilename , DWORD dwAcc
   return pRWFile;
 }
 
-BOOL MCFSSampleStream::CloseFile( IRWFile *pIFile, bool /*bAbort*/ )
+BOOL MCFSSampleStream::CloseItem( IRWFile *pIFile, bool /*bAbort*/ )
 {
   ResetLastError();
   StreamRWFile* pRWFile = (StreamRWFile*)pIFile;
@@ -678,4 +678,9 @@ BOOL MCFSSampleStream::BatchFileOperations_Release( ZHANDLE hIntOp )
 void MCFSSampleStream::ResetLastError()
 {
   m_nLastError = VERROR_NOERROR;
+}
+
+bool MCFSSampleStream::NeedParseContent()
+{
+  return false;
 }

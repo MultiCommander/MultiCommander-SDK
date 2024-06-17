@@ -28,6 +28,7 @@
 #include "ISessionConfig.h"
 #include "IAppConfig.h"
 #include "ICommandManager.h"
+#include "IRestartRecoveryDataCollector.h"
 
 #include "MCNamespace.h"
 MCNSBEGIN
@@ -63,10 +64,11 @@ class IDataViewerWindow;
 #define FMTBYTES_DECIMALS2  0x03000000 // 0
 
 
-class __declspec(novtable) IMultiAppInterface 
+class /*__declspec(novtable)*/ IMultiAppInterface 
 {
 public:
 
+  virtual ~IMultiAppInterface() = default;
   // WARNING ! a persistent interface is limited in what it can do. 
   // It should NOT be used to get/create UI components. only be use it for none GUI API.
   // And ReleasePersistenAppInterface() should be run at program exist. example from DLL_PROCESS_DETECH
@@ -118,6 +120,7 @@ public:
   virtual BOOL    GetText( long ModuleID , long TextID ,/*[out]*/ WCHAR* str , int StrSize ) = 0;
   virtual BOOL    PutText( long ModuleID , long TextID , const WCHAR* str ) = 0;
 
+  // is 0 for moduleid for text from MultiCommander_lang_xx.xml
   virtual const WCHAR* GetText(long ModuleID, long textID) = 0;
   virtual const WCHAR* GetDesc(long ModuleID, long textID) = 0;
 
@@ -141,6 +144,9 @@ public:
   // return TRUE if we are currently on the MAIN UI Thread.
   virtual bool  IsMainThread() = 0;
 
+  // true if MultiCommander is shutting down
+  virtual bool  IsShuttingDown() = 0;
+
   virtual void  PostMessage( DWORD dwMessage , WPARAM dwModuleID , LPARAM wParam ) = 0;
   virtual BOOL  RedirectMessageViaMainThread(DWORD dwMessage, WPARAM wParam , LPARAM lParam ) = 0;
   virtual BOOL  RedirectMessageViaGUIThread(DWORD dwMessage, WPARAM wParam , LPARAM lParam ) = 0;
@@ -151,6 +157,9 @@ public:
 
   virtual DWORD SendMessageToSource( DWORD dwMessage, WPARAM wParam = 0, LPARAM lParam = 0,DWORD dwFlags = 0) = 0;
   virtual DWORD SendMessageToTarget( DWORD dwMessage, WPARAM wParam = 0, LPARAM lParam = 0,DWORD dwFlags = 0) = 0;
+
+  // send notification code to all matching modules,
+  virtual void  SendNotificationToAll(const DWORD dwModuleId, void* from, const DWORD dwNotifyCode, const WPARAM wParam = 0, const LPARAM lParam = 0, void* pExtra = nullptr) const = 0;
 
   //////////////////////////////////////////////////////////////////////////
   // Register/Find/Remove Commands. Command can the be assigned to Menus/Hotkey. 
@@ -213,6 +222,12 @@ public:
 
   virtual BOOL  RegisterAsPanelApplication(ZHANDLE hCmd) = 0;
 
+  // use nullptr to register it as the default handle. (Only valid for build in preview handler)
+  virtual bool  RegisterAsPreviewHandler(const wchar_t* szFileFilter) = 0;
+
+  // Not used yet.
+  virtual void RegisterUsage(const DWORD nID) const = 0;
+
   // Query interface for UI or Other Objects
   // See the ZOBJ_FILESYSTEM and ZOBJ_xxxx constants for interface to query
   virtual void* QueryInterface( long iid ) = 0;
@@ -249,22 +264,13 @@ public:
   // CommandBar
   virtual MCNS::ZHANDLE CreateMainCommandBar(int& nTabID, const WCHAR* strTabName, long TextID = 0, DWORD dwFlags = 0, const WCHAR* szToolbarID = nullptr) = 0;
 
-  //////////////////////////////////////////////////////////////////////////
-  // Toolbar
-  // 
-  // if strTabName is NULL , then use value from TextID
-  virtual int     AddToolBarTab( const WCHAR* strTabName , long TextID = 0 , DWORD dwFlags = 0 ) = 0;
-  virtual ZHANDLE GetTBFromToolBarTab( int nIndex ) = 0;
-  virtual int     GetTabIDFromName( const WCHAR* strName ) = 0;
-  virtual BOOL    UpdateToolTipsOnTabToolbar( ZHANDLE hToolbar ) = 0;
-
+  
   virtual ZHANDLE CreateDeviceCommandBar(int& nTabID, const WCHAR* strTabName, long TextID = 0, ZHANDLE hCommand = 0,
                                          const WCHAR* szCommandBarID = nullptr, bool ownRow = false, DWORD deviceTypes = 0, const TCHAR* szDeviceFilter = nullptr, DWORD dwExtraData = 0) = 0;
 
   virtual ZHANDLE DeviceCommandBar_GetLastActiveItem() = 0;
   virtual ZHANDLE DeviceCommandBar_GetCustomData(ZHANDLE hBarItem) = 0;
-
-
+  
   // Will add ZHANDLE to list of returned handle. Use ReleaseZHandle if you do not store the handle in a member
   virtual ZHANDLE GetCommandBarByName(const WCHAR* szToolbarID) = 0;
 
@@ -320,16 +326,18 @@ public:
   virtual bool    GetTabLabel( ZHANDLE h , WCHAR* strLabel , UINT nMaxLenght ) = 0;
   virtual void    SetTabLabel( ZHANDLE h , const WCHAR* strLabel, const WCHAR* strTooltip = NULL, DWORD dwFlags = 0 ) = 0;
   virtual void    SetTabIcon( ZHANDLE h , HICON hIcon ) = 0;
-  virtual void    SetTabIconAndLabel(ZHANDLE h, HICON hIcon, const WCHAR* strLabel, const WCHAR* strToolTip = NULL, DWORD dwFlags = 0 );
+  virtual void    SetTabIconAndLabel(ZHANDLE h, HICON hIcon, const WCHAR* strLabel, const WCHAR* strToolTip = NULL, DWORD dwFlags = 0 ) = 0;
   virtual void    SetTabTooltip( ZHANDLE h , const WCHAR* strTooltip) = 0;
 
   // set color to -1 to use default  
   // bUseHotOnActive is true then hot (hover) color will be used if tab is active
   virtual void    SetTabColor(ZHANDLE h, COLORREF crBackgroundColor, COLORREF crTextColor, bool bGradient, bool bUseHotOnActive) = 0;
+  virtual void    SetTabColorEx(ZHANDLE h, COLORREF crBackgroundColor, COLORREF crTextColor, COLORREF crBackgroundColorInactive, COLORREF crTextColorInactive, bool bGradient, bool bUseHotOnActive) = 0;
 
   // Get Tab Settings for extension. (If there are any settings for this extension, if not then this function will return false)
   // dwFlags are TABSETTING_xxx flags
   virtual bool GetTabSettings(COLORREF& crBackground, COLORREF& crText, DWORD& dwFlags) = 0;
+  virtual bool GetTabSettingsEx(COLORREF& crBackground, COLORREF& crText, COLORREF& crBackgroundInactive, COLORREF& crTextInactive, DWORD& dwFlags) = 0;
 
   virtual void    SetButtonMenu( ZHANDLE hButton , ZHANDLE hMenuMan , ZHANDLE hParent ) = 0;
 
@@ -502,13 +510,17 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // IMiscUtils
   // 
-  // Will format a bytes 
+  // Will format bytes 
   // Example
   // m_pAppInterface->FormatBytes(szBytes, _countof(szBytes), nBytes, FMTBYTES_SIZE_BYTES|FMTBYTES_UNIT_LONG|FMTBYTES_DECIMALS0);
   virtual bool FormatBytes(WCHAR* szOut, DWORD nLen, INT64 nSize, DWORD dwFlags) = 0;
 
   virtual bool ReadToString(WCHAR* szBuffer, DWORD nMaxLen, const WCHAR* szFilename) = 0;
   virtual bool ReadToString(char* szBuffer, DWORD nMaxLen, const WCHAR* szFilename) = 0;
+
+  virtual void KeepSystemAlive(bool alive) = 0;
+
+  virtual void AddRestoreTabInfo(const wchar_t* szDisplayName, IKeyValCollection* pTabParameters) = 0;
 };
 
 MCNSEND

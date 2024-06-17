@@ -101,7 +101,7 @@ long MCFSSampleInternal::PreStartInit( IMultiAppInterface* pInterface )
   return 0;
 }
 
-bool MCFSSampleInternal::GetIcon(HICON* /*pIcon*/, const WCHAR* /*fileExtension*/, MCIconSize::MCIconSize /*iconSize*/)
+bool MCFSSampleInternal::GetIcon(HICON* /*pIcon*/, const WCHAR* /*fileExtension*/, MCIconSize /*iconSize*/)
 {
   /*
   // If FSPlugin was an archive. then you can provide an icon for your extension. 
@@ -330,7 +330,7 @@ BOOL MCFSSampleInternal::Makedir( const WCHAR* szPath , const FILETIME* pFileTim
   return FALSE;
 }
 
-BOOL MCFSSampleInternal::MoveFile( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions /* EXO_ */ )
+BOOL MCFSSampleInternal::MoveItem( const WCHAR* szExistingFile , const WCHAR* szNewFilename, DWORD dwExecuteOptions /* EXO_ */ )
 {
   UNREFERENCED_PARAMETER(dwExecuteOptions);
 
@@ -370,7 +370,7 @@ BOOL MCFSSampleInternal::MoveFile( const WCHAR* szExistingFile , const WCHAR* sz
   return FALSE;
 }
 
-BOOL MCFSSampleInternal::DeleteFile( const WCHAR* szExistingFile , DWORD dwExecuteOptions /*= EXO_ISFILE*/ )
+BOOL MCFSSampleInternal::DeleteItem( const WCHAR* szExistingFile , DWORD dwExecuteOptions /*= EXO_ISFILE*/ )
 {
   UNREFERENCED_PARAMETER(szExistingFile);
   UNREFERENCED_PARAMETER(dwExecuteOptions);
@@ -452,7 +452,7 @@ DWORD MCFSSampleInternal::ExtractFile( const WCHAR* szFilename , const WCHAR* sz
   return 0;
 }
 
-IRWFile* MCFSSampleInternal::CreateFile( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 /*nFileSize*/ /*= 0*/ )
+IRWFile* MCFSSampleInternal::CreateItem( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 /*nFileSize*/ /*= 0*/ )
 {
   UNREFERENCED_PARAMETER(szFilename);
   UNREFERENCED_PARAMETER(dwAccessMode);
@@ -464,7 +464,7 @@ IRWFile* MCFSSampleInternal::CreateFile( const WCHAR* szFilename , DWORD dwAcces
   return NULL;
 }
 
-BOOL MCFSSampleInternal::CloseFile( IRWFile* pIFile, bool bAbort )
+BOOL MCFSSampleInternal::CloseItem( IRWFile* pIFile, bool bAbort )
 {
   UNREFERENCED_PARAMETER(pIFile);
   UNREFERENCED_PARAMETER(bAbort);
@@ -651,4 +651,9 @@ BOOL MCFSSampleInternal::BatchFileOperations_Release( ZHANDLE hIntOp )
 void MCFSSampleInternal::ResetLastError()
 {
   m_nLastError = VERROR_NOERROR;
+}
+
+bool MCFSSampleInternal::NeedParseContent()
+{
+  return false;
 }

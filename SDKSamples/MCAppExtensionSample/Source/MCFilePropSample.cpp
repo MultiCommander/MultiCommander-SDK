@@ -70,7 +70,7 @@ long MCFilePropSample::PreStartInit( IMultiAppInterface* pAppInterface )
     fpd.szCategoryName = strCategory.c_str();
     fpd.szDescription = NULL;
 
-    fpd.propType = MCFILEPROP_SAMPLE1;
+    fpd.PropertyId = MCFILEPROP_SAMPLE1;
     fpd.szPropName = L"SampleProp1";  // Machine name. only use Latin chars. This name is not shown to user. 
     fpd.szDisplayName = pAppInterface->GetText(MAKETEXTID('p',201));
     fpd.dwOptions =  FILEPROP_STRING|FILEPROP_ASYNC|FILEPROP_CUSTOMIZABLE;
@@ -78,7 +78,7 @@ long MCFilePropSample::PreStartInit( IMultiAppInterface* pAppInterface )
     fpd.Align = DT_LEFT;
     pPropMan->RegisterProperty(&fpd);
 
-    fpd.propType = MCFILEPROP_SAMPLE2;
+    fpd.PropertyId = MCFILEPROP_SAMPLE2;
     fpd.szPropName = L"SampleProp2";  // Machine name. only use Latin chars. This name is not shown to user. 
     fpd.szDisplayName = pAppInterface->GetText(MAKETEXTID('p',202));
     fpd.dwOptions =  FILEPROP_NUM|FILEPROP_ASYNC|FILEPROP_CUSTOMIZABLE | FILEPROP_EXECUTE; // If user Ctrl+DblClick on this column MCFilePropSample::Execute(..) is called.

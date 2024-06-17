@@ -96,7 +96,7 @@ class __declspec(novtable) IFileViewInterface
 {
 public:	
   virtual void Set_Option( DWORD dwOption , DWORD dwParam ) = 0;
-  virtual DWORD Get_Option( DWORD dwOption ) = 0;
+  virtual DWORD Get_Option( DWORD dwOption ) const = 0;
 
   virtual bool ChangeViewMode(DWORD nViewMode, DWORD dwOptions, DWORD dwSizes, int nShowFileExt, bool bVertical, short nFirstColWidth = -1) = 0;
 
@@ -204,5 +204,7 @@ public:
   virtual bool DoRenameCurrent() = 0;
 
   virtual void Collapse() = 0;
+
+  virtual IFileItem* GetFileItemInFocus() const = 0;
 };
 MCNSEND

@@ -14,12 +14,15 @@
 #include "MCNamespace.h"
 MCNSBEGIN
 
+// Change to void*
 typedef DWORD_PTR ZHANDLE;
 
 typedef DWORD_PTR XHANDLE;
 
 typedef long    ZRETURN; // return code
 typedef DWORD_PTR   ZCMDID;
+
+constexpr ZHANDLE ZHANDLE_INVALIDHANDLE = ((ZHANDLE)(LONG_PTR)-1);
 
 class __declspec(novtable) IHObject
 {
