@@ -9,6 +9,10 @@ if not exist "%MCPATH%Extensions\%EXTENSIONNAME%" mkdir "%MCPATH%Extensions\%EXT
 
 if not exist "%MCPATH%Extensions\%EXTENSIONNAME%\Languages" mkdir "%MCPATH%Extensions\%EXTENSIONNAME%\Languages"
 
+echo Copy Extension
 copy /y %1 "%MCPATH%Extensions\%EXTENSIONNAME%\"
 
+echo Copy Configuration for Extension
 xcopy /S  /Y "%~dp0Config\*" "%MCPATH%Extensions\%EXTENSIONNAME%\"
+
+exit 0

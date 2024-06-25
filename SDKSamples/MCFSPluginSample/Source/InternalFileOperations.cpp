@@ -365,7 +365,7 @@ void InternalWriteFileOperations::SetFileDateAndAttributes(std::shared_ptr<Memor
 
   if((m_dwFlags & FILEOP_DKEEP_ATTRIB) == 0 )
   {
-    DWORD dwAttributes = pFileItem->Get_Attributes();
+    auto dwAttributes = pFileItem->Get_Attributes();
     dwAttributes ^= dwAttributes & ZFF_MC_EXTENDED; // Remove all MC Extended (of any)
     pFile->Attributes(dwAttributes);
   }

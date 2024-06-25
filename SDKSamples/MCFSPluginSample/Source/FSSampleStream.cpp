@@ -14,8 +14,8 @@ namespace
 {
   const WCHAR* GetLastPathPart(const WCHAR* szPath)
   {
-    if(szPath == NULL)
-      return NULL;
+    if(szPath == nullptr)
+      return nullptr;
 
     const WCHAR* szLast = wcsrchr(szPath, '\\');
     if(szLast)
@@ -39,7 +39,7 @@ namespace
 
 bool MCFSSampleStream::GetExtensionInfo( DLLExtensionInfo* pInfo )
 {
-  if( pInfo == NULL )
+  if( pInfo == nullptr)
     return false;
 
   wcsncpy( pInfo->wsName , L"FSSample-Stream" , 100 );
@@ -93,7 +93,7 @@ long MCFSSampleStream::PreStartInit( IMultiAppInterface* pInterface )
   HICON hAppIconSmall = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 357 , false);
   HICON hAppIconLarge = pInterface->LoadIcon_ToolbarSize( (HINSTANCE)-1, 357 , true );
 
-  pFSManager->AddVirtualDevice( _T("SMP1 (Stream)"), L"SMP1:" , hAppIconSmall, hAppIconLarge, NULL, DEVF_FREESPACE_EMPTY);
+  pFSManager->AddVirtualDevice( _T("SMP1 (Stream)"), L"SMP1:" , hAppIconSmall, hAppIconLarge, nullptr, DEVF_FREESPACE_EMPTY);
   DestroyIcon(hAppIconSmall);
   DestroyIcon(hAppIconLarge);
 
@@ -144,7 +144,7 @@ BOOL MCFSSampleStream::Open( const WCHAR* szVolume , const WCHAR* szMountPath /*
 {
   UNREFERENCED_PARAMETER(dwFlags);
 
-  if( szMountPath != NULL )
+  if( szMountPath != nullptr)
   {
     if(_wcsnicmp(szMountPath, L"smp1:" , 5) == 0)
       m_strMountPath = L"SMP1:";
@@ -334,10 +334,10 @@ BOOL MCFSSampleStream::MoveItem( const WCHAR* szExistingFile , const WCHAR* szNe
   szExistingFile = RemoveDeviceFromPath(szExistingFile);
   szNewFilename = RemoveDeviceFromPath(szNewFilename);
 
-  if(szExistingFile == NULL || szNewFilename == NULL)
+  if(szExistingFile == nullptr || szNewFilename == nullptr)
     return FALSE;
 
-  if(szNewFilename == '\0')
+  if(szNewFilename[0] == L'\0')
     return FALSE;
 
   std::shared_ptr<MemoryFile> pFileExisting = m_MemFS.FindByPath(szExistingFile);
@@ -345,7 +345,7 @@ BOOL MCFSSampleStream::MoveItem( const WCHAR* szExistingFile , const WCHAR* szNe
   {
 
     std::shared_ptr<MemoryFile> pTargetFolder = m_MemFS.FindByPath(szNewFilename, true);
-    if(pTargetFolder == NULL)
+    if(pTargetFolder == nullptr)
     {
       m_nLastError = VERROR_PATH_NOT_FOUND;
       return FALSE;
@@ -372,7 +372,7 @@ BOOL MCFSSampleStream::DeleteItem( const WCHAR* szExistingFile , DWORD dwExecute
 
   ResetLastError();
   szExistingFile = RemoveDeviceFromPath(szExistingFile);
-  if(szExistingFile == NULL || szExistingFile[0] == '\0')
+  if(szExistingFile == nullptr || szExistingFile[0] == '\0')
   {
     m_nLastError = VERROR_FILE_NOT_FOUND;
     return FALSE;
@@ -503,7 +503,7 @@ IRWFile* MCFSSampleStream::CreateItem( const WCHAR* szFilename , DWORD dwAccessM
   }
 
   m_nLastError = VERROR_PATH_NOT_FOUND;
-  return NULL;
+  return nullptr;
 }
 
 IRWFile* MCFSSampleStream::CreateFileWrite( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 nFileSize /*= 0*/ )
@@ -526,7 +526,7 @@ IRWFile* MCFSSampleStream::CreateFileWrite( const WCHAR* szFilename , DWORD dwAc
     }
 
     m_nLastError = VERROR_ALREADY_EXISTS;
-    return NULL;
+    return nullptr;
   }
 
 
@@ -536,7 +536,7 @@ IRWFile* MCFSSampleStream::CreateFileWrite( const WCHAR* szFilename , DWORD dwAc
      if(!pFolder)
      {
        m_nLastError = VERROR_PATH_NOT_FOUND;
-       return NULL;
+       return nullptr;
      }
 
      pFile = pFolder->CreateNewFile(GetLastPathPart(szFilename));
@@ -548,7 +548,7 @@ IRWFile* MCFSSampleStream::CreateFileWrite( const WCHAR* szFilename , DWORD dwAc
      }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 IRWFile* MCFSSampleStream::CreateFileRead( const WCHAR* szFilename , DWORD dwAccessMode , DWORD dwCreateMode , UINT64 dwAttributes /*= 0 */, DWORD dwRWFlags /*= 0 */, const FILETIME* ftFileTime /*= NULL */, INT64 nFileSize /*= 0*/ )
@@ -561,10 +561,10 @@ IRWFile* MCFSSampleStream::CreateFileRead( const WCHAR* szFilename , DWORD dwAcc
   UNREFERENCED_PARAMETER(nFileSize);
 
   std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szFilename);
-  if(pFile == NULL)
+  if(pFile == nullptr)
   {
     m_nLastError = VERROR_FILE_NOT_FOUND;
-    return NULL;
+    return nullptr;
   }
 
   StreamRWFile* pRWFile = new StreamRWFile(pFile);
