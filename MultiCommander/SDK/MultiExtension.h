@@ -29,6 +29,14 @@ TODO - Rename IPluginInterface to IAppExtension
 */
 class IAppMenu;
 
+struct CloseContext
+{
+  bool Shutdown;
+  bool DoNotAsk;
+  bool ClosingMany;
+};
+
+
 class __declspec(novtable) IPluginInterface
 {
 public:
@@ -78,7 +86,7 @@ public:
 
   // Modules is requested to close. return TRUE if cleanup was successfully or FALSE if modules should not close down
   // bShutdownClose is TRUE if MultiCommander is shutting down. 
-  virtual BOOL OnClose(bool bShutDown, bool bDoNotAsk) = 0;
+  virtual BOOL OnClose(CloseContext& context) = 0;
 
   // Import/Export Interface for transferring data between extensions.
   // return 0 : False                   ZIMPORT_FALSE

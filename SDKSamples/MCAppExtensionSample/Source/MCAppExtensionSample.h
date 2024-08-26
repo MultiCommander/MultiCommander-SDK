@@ -28,7 +28,7 @@ public:
   
   BOOL OnCustomCommand( ICustomCommand* pCustomCommand ) override;
 
-  BOOL OnClose(bool bShutDown, bool bDoNotAsk) override;
+  BOOL OnClose(CloseContext& context) override;
 
   // Use to send data between different kind of extensions
   int       DoImportData( IXData *pXData ) override;

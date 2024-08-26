@@ -69,6 +69,8 @@ bool MCAppExtensionSample::GetExtensionInfo( DLLExtensionInfo* pInfo )
 long MCAppExtensionSample::PreStartInit( IMultiAppInterface* pAppInterface )
 {
 
+  pAppInterface->LogFmt(0, LogLevel::_DEBUG_, L"Loading... %s", L"Parameter");
+
   // Lets register some commands and add them to the menu
   IMenuManager* pMenuManager = pAppInterface->GetMenuManager();
   
@@ -179,7 +181,11 @@ BOOL MCAppExtensionSample::OnMessage( long msg , ZHANDLE /*hView*/ , WPARAM para
   switch( msg )
   {
       // AM_CLOSE is sent if user specifically choose to close and extensions.
-      case AM_CLOSE     : return OnClose(false, false); break;
+    case AM_CLOSE:
+    {
+      CloseContext context = {false,false, false};
+      return OnClose(context);
+    }
       
       // Handle CommandID on Some Internal command and own command (menus command)
       // if they should be visible, grayed , checked and so on
@@ -318,10 +324,9 @@ BOOL MCAppExtensionSample::OnScriptFunction(IScriptFunctionContext* pScriptFuncC
 
 // This Extension is about to be close (deleted). 
 // return TRUE if cleanup was successfully or FALSE if modules can not close down. 
-BOOL MCAppExtensionSample::OnClose(bool bShutdown, bool bDoNotAsk)
+BOOL MCAppExtensionSample::OnClose(CloseContext& context)
 {
-  UNREFERENCED_PARAMETER(bShutdown);
-  UNREFERENCED_PARAMETER(bDoNotAsk);
+  UNREFERENCED_PARAMETER(context);
   return FALSE;
 }
 

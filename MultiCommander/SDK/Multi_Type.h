@@ -18,6 +18,7 @@ MCNSBEGIN
 typedef DWORD_PTR ZHANDLE;
 
 typedef DWORD_PTR XHANDLE;
+typedef void*     PHANDLE;
 
 typedef long    ZRETURN; // return code
 typedef DWORD_PTR   ZCMDID;

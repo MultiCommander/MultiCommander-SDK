@@ -73,12 +73,13 @@ MCNSBEGIN
 #define ZCV_TREEVIEW              100  // Tree List View
 #define ZCV_RICHEDIT              200  // RichEdit View   -  OBSOLETE - Not used
 #define ZCV_EDITVIEW              300  // Dummy Edit view -  OBSOLETE - Not used
-#define ZCV_LISTVIEW              400  // ListCtrl view
+#define ZCV_LISTVIEW              400  // ListCtrl view -  OBSOLETE - Not used, use MultiListView. 
 #define ZCV_MULTILISTVIEW         500  // MultiList view
 #define ZCV_FILESYSTEMBROWSERVIEW 600  // FileSystemBrowser View
 #define ZCV_FOLDERTREEVIEW        610  // FolderTree view
-//#define ZCV_FILEWORKSPACEVIEW     650  // FileWorkspace view
+#define ZCV_FILEWORKSPACEVIEW     650  // FileWorkspace view
 #define ZCV_PREVIEWVIEW           660  // Data Preview view
+#define ZCV_TEXTVIEW              670  // Text / Log view
 
 #define ZCV_TOOLBAR               700  // A Toolbar view
 #define ZCV_COMMANDBAR            710  // A Commandbar view
@@ -371,6 +372,7 @@ MCNSBEGIN
 #define ZFVX_COMMENT     15
 #define ZFVX_OSTYPE      16 // 32 or 64bit
 #define ZFVX_SHORTNAME   19
+#define ZFVX_FILETYPENAME 20
 
 #define ZFVX_DATECREATE  21
 #define ZFVX_DATEMODIFY  22
@@ -417,6 +419,7 @@ MCNSBEGIN
 
 #define ZFVX_CLOUD_STATE       85
 #define ZFVX_CLOUD_STATE_ATTRIB 86
+#define ZFVX_REPARSE_TAG        87
 
 // Custom script columns
 #define ZFVX_SCIPTCOL_1  100

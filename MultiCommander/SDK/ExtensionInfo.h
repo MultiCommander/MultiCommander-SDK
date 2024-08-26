@@ -71,5 +71,17 @@ struct DLLExtensionInfo
 
 };
 
+struct VersionInfo
+{
+  wchar_t CompanyName[64];
+  wchar_t FileDescription[64];
+  wchar_t FileVersion[64];
+  wchar_t FileVersionEx[64];
+  wchar_t ProductName[64];
+  wchar_t ProductVersion[64];
+  wchar_t LegalCopyright[64];
+  wchar_t PrivateBuild[64];
+  wchar_t SpecialBuild[64];
+};
 MCNSEND
 

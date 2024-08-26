@@ -302,23 +302,23 @@ struct SelectWindowData
   }
   HWND hWndParent{};
 
-  WCHAR strTitle[64]{};
-  WCHAR strFooter[64]{};
+  WCHAR strTitle[64]{0};
+  WCHAR strFooter[64]{0};
 
 
   // The icons will be copied so destroy them after setting them
-  HICON hIconSet{}; 
-  HICON hIconClear{};
-  WCHAR strSetToolTip[128]{};   //Tooltip for the set icon-button
-  WCHAR strClearToolTip[128]{}; //Tooltip for the Clear icon-button
+  HICON hIconSet = nullptr; 
+  HICON hIconClear = nullptr;
+  WCHAR strSetToolTip[128] = {0};   //Tooltip for the set icon-button
+  WCHAR strClearToolTip[128] = {0}; //Tooltip for the Clear icon-button
 
-  POINT pt{};     // Where to show the window ( upper left corner )
-  UINT  nWidth{}; // Width of the window
+  POINT pt{0,0};     // Where to show the window ( upper left corner )
+  UINT  nWidth = {0}; // Width of the window
 
-  IValueCollection* pValues{}; // Values to show
-  DWORD             nValues{}; // Values to show
+  IValueCollection* pValues = nullptr; // Values to show
+  DWORD             nValues = 0; // Values to show
 
-  IEventCallback* pClickCallback{}; // OnItemClick Callback.
+  IEventCallback* pClickCallback = nullptr; // OnItemClick Callback.
 };
 
 #ifndef CLR_NONE

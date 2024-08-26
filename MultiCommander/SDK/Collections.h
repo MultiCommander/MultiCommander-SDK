@@ -37,6 +37,25 @@ public:
 
 };
 
+// Collection that holds points items
+class __declspec(novtable) IPCollection
+{
+public:
+  virtual void Add(PHANDLE h) = 0;
+
+  // enum
+  virtual void  Reset() = 0; // set internal next pointer to first
+  virtual PHANDLE Next() = 0;
+  //
+  virtual DWORD    Count() = 0;
+  virtual PHANDLE GetAt(DWORD nIndex) = 0;
+  virtual void  Clear();
+
+  // deletes instance
+  virtual void Release() = 0;
+
+};
+
 // Text => Value - map like collection
 class __declspec(novtable) ITextValueCollection
 {

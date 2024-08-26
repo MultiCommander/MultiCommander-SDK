@@ -207,4 +207,5 @@ public:
 
   virtual IFileItem* GetFileItemInFocus() const = 0;
 };
+
 MCNSEND

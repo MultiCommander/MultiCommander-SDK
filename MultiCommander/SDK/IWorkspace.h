@@ -17,18 +17,40 @@
 #include "MCNamespace.h"
 MCNSBEGIN
 
+  class IFileWorkspaceExtendedItem;
+
   // WorkspaceItemFlags
 #define WIF_VIRTUALFOLDER 0x0010
 
 class __declspec(novtable) IWorkspaceItem
 {
 public:
-  virtual const WCHAR* GetName(WCHAR* str , UINT nMaxLength) = 0;
-  virtual const WCHAR* GetPath(WCHAR* str , UINT nMaxLength) = 0;
-  virtual const WCHAR* GetRefPath(WCHAR* str , UINT nMaxLength) = 0;
-  virtual UINT64    GetAttributes() = 0;
-  virtual DWORD    GetFlags() = 0;
-  virtual IFileItem*   GetRefItem() = 0;
+  virtual const WCHAR* GetName(WCHAR* str, UINT nMaxLength) = 0;
+  virtual const WCHAR* GetPath(WCHAR* str, UINT nMaxLength) = 0;
+  virtual const WCHAR* GetRefPath(WCHAR* str, UINT nMaxLength) = 0;
+  virtual UINT64       GetAttributes() = 0;
+  virtual DWORD        GetFlags() = 0;
+  virtual IFileItem* GetRefItem() = 0;
+};
+
+class __declspec(novtable) IWorkspaceItem2
+{
+public:
+
+  virtual const wchar_t* DisplayName() const = 0;
+  virtual const wchar_t* DisplayPath() const = 0;
+
+  virtual const wchar_t* TargetPath() const = 0;
+  virtual const wchar_t* TargetName() const = 0;
+  virtual const wchar_t* FullTargetPath(wchar_t* str, const int len) const = 0;
+
+  virtual bool IsVirtualFolder() const = 0;
+
+  virtual DWORD GetAttributes() const = 0;
+
+  virtual UINT64 GetSize() const = 0;
+
+  virtual MCNS::IFileWorkspaceExtendedItem* GetExtendedItem() const = 0;
 };
 
 
@@ -45,7 +67,54 @@ public:
 #define WVS_DRAGDATA_FILEPATHS  0x0002  // Allows files to be dragged OUT of the controller
 #define WVS_DRAGDATA_INTERNALFORCECOPY  0x0004  // Force 'Copy' drag actions as default for internal drags to filebrowser
 
+//=====================
 
+class __declspec(novtable) IFileWorkspaceExtendedItem
+{
+public:
+
+};
+
+class __declspec(novtable) IFileWorkspaceCallback
+{
+public:
+  virtual ~IFileWorkspaceCallback() = default;
+
+  virtual const wchar_t* GetItemName(MCNS::IFileWorkspaceExtendedItem* pItem, DWORD nColumnId) = 0;
+  virtual bool GetItemText(OUT wchar_t* szText, long textSize, const MCNS::IWorkspaceItem2* pWorkspaceItem, DWORD nColumnId) = 0;
+
+  virtual bool ItemDropped(IWorkspaceItem2* pParentItem, IFileItem* pDroppedItem) = 0;
+  // All Items cleared.. If you got anything cached, Clear caches now
+  virtual void OnAllCleared() = 0;
+};
+
+
+class __declspec(novtable) IFileWorkspaceView
+{
+public:
+  virtual void SetCallback(MCNS::IFileWorkspaceCallback* pCallback) = 0;
+
+  virtual MCNS::IWorkspaceItem2* AddItem(MCNS::IWorkspaceItem2* pParent, const wchar_t* targetPath, const wchar_t* displayName, DWORD attributes, MCNS::IFileWorkspaceExtendedItem* pItem, bool updateUI) = 0;
+  virtual void ClearAll() = 0;
+
+  virtual void Refresh() = 0;
+
+  virtual void SetFont(const wchar_t* szFontName, long fontStyle, int fontSize) = 0;
+  virtual void SetIconSize(int cxySize) = 0;
+
+  virtual void RemoveAllColumns() = 0;
+  virtual void AddColumn(const wchar_t* name, int width, DWORD align, DWORD flags, DWORD id) = 0;
+  virtual void RebuildColumns() = 0;
+
+  // return a collection of all item at path level
+  virtual IPCollection* GetItems(const wchar_t* path) = 0;
+  virtual MCNS::IPCollection* GetChilds(MCNS::PHANDLE hParent) = 0;
+
+  
+};
+//=====================
+
+// OSBOSLETE -- Used by OLD file search
 class __declspec(novtable) IFileWorkspaceViewInterface : public IHObject, public ISetEvent
 {
 public:

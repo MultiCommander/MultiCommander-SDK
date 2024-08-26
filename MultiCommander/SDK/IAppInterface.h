@@ -521,6 +521,9 @@ public:
   virtual void KeepSystemAlive(bool alive) = 0;
 
   virtual void AddRestoreTabInfo(const wchar_t* szDisplayName, IKeyValCollection* pTabParameters) = 0;
+
+  // if szfilename is nullptr, then version info for MultiCommander is returned
+  virtual void GetVersionInfo(VersionInfo* versionInfo, const wchar_t* szFilename) = 0;
 };
 
 MCNSEND

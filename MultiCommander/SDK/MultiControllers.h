@@ -202,7 +202,7 @@ public:
   // obsolete
   virtual ZHANDLE CreateControlAsView( long CreateType , long CreateParam , int row , int col , int minSize , int cmd ) = 0;
 
-  // Most be run if anything is changed in the splitter.
+  // Must be run if anything is changed in the splitter.
   virtual BOOL	RecalcLayout() = 0;
   virtual BOOL  Refresh() = 0;
 
@@ -356,5 +356,30 @@ public:
 
   virtual void SetFont(const WCHAR* szFaceName, int size, long fontFlags) = 0;
 };
+
+enum class MultiDataTextViewMode
+{
+  Auto = 0,
+  Ascii = 1,
+  Unicode = 2,
+  UniocodeBe = 3,
+  UTF8 = 4,
+  Binary = 5,
+  Hex = 6  
+};
+
+class __declspec(novtable) IMultiDataTextView : public IHObject
+{
+public:
+
+  virtual void SetFont(const WCHAR* szFaceName, int size, long fontFlags) = 0;
+  
+  virtual void SetBufferSize(int bytes) = 0;
+  virtual void InitMemoryView(MultiDataTextViewMode viewMode) = 0;
+
+  virtual void AddText(const wchar_t* szText) = 0;
+  virtual void AddText(const char* szText) = 0;
+};
+
 
 MCNSEND

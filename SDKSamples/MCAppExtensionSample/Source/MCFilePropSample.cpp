@@ -45,7 +45,6 @@ bool MCFilePropSample::GetExtensionInfo( DLLExtensionInfo* pInfo )
 #endif
 
   pInfo->dwInitOrder = 2010; // All 3de party extension must start use 2000 or more
-
   pInfo->dwInterfaceVersion = MULTI_INTERFACE_VERSION;  // What version of MultiCommander Extension Interface this extensions is built for
   return true;
 }
@@ -68,7 +67,7 @@ long MCFilePropSample::PreStartInit( IMultiAppInterface* pAppInterface )
 
     std::wstring strCategory = pAppInterface->GetText(MAKETEXTID('p',200));
     fpd.szCategoryName = strCategory.c_str();
-    fpd.szDescription = NULL;
+    fpd.szDescription = nullptr;
 
     fpd.PropertyId = MCFILEPROP_SAMPLE1;
     fpd.szPropName = L"SampleProp1";  // Machine name. only use Latin chars. This name is not shown to user. 
