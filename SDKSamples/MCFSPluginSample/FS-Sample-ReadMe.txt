@@ -1,4 +1,4 @@
-Version 0.2 - Copyright 2020 - Mathias Svensson
+Version 0.3 - Copyright 2025 - Mathias Svensson
 
   Introduction
   =====================================================

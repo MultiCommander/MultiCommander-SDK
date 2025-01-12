@@ -158,8 +158,10 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 // Extended property for fileitem with attribute ZFF_MCLINK
 // GetExtraPropData(0, ZEXTPROP_LINKTARGET)
 #define ZEXTPROP_LINKTARGET 42
-#define ZEXTPROP_LINKTARGET_TYPE_PATH 1
-#define ZEXTPROP_LINKTARGET_TYPE_URL  2
+  #define ZEXTPROP_LINKTARGET_TYPE_PATH 1
+  #define ZEXTPROP_LINKTARGET_TYPE_URL  2
+#define ZEXTPROP_FILECOUNT   43
+#define ZEXTPROP_FOLDERCOUNT 44
 
 #define ZF_TAG1   0x01
 #define ZF_TAG2   0x02
@@ -173,6 +175,8 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 // Extended FileProperty Data 
 struct ExtraProp
 {
+  bool   ClearOnUpdate; // if fileitem was updated (Date/size/name) then clear this property
+  bool   ClearOnRename; // if fileitem was renamed then clear this property
   BYTE   Flag;
 
   WCHAR  szDisplayName[512];
@@ -198,6 +202,8 @@ class __declspec(novtable) IFileItem
 {
 public:
   virtual        ~IFileItem() = default;
+
+  virtual bool IsValid() const = 0;
 
   virtual WCHAR*   Get_Name(_Out_writes_z_(nMaxLen) WCHAR* szName, _In_ DWORD nMaxLen) const = 0;
   virtual WCHAR*   Get_NameOnly(_Out_writes_z_(nMaxLen) WCHAR* szName, _In_ DWORD nMaxLen) const = 0;

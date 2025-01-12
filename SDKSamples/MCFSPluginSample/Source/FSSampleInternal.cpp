@@ -475,10 +475,11 @@ DWORD MCFSSampleInternal::GetOptionalFunctions()
   return IVF_GETSIZE; // Support of Folder sizing.
 }
 
-BOOL MCFSSampleInternal::GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size , volatile bool* bAbort)
+BOOL MCFSSampleInternal::GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size, bool followLinks, volatile bool* bAbort)
 {
   UNREFERENCED_PARAMETER(bAbort);
   UNREFERENCED_PARAMETER(szFilter);
+  UNREFERENCED_PARAMETER(followLinks);
 
   szPath = RemoveDeviceFromPath(szPath);
   const std::shared_ptr<MemoryFile> pFile = m_MemFS.FindByPath(szPath);

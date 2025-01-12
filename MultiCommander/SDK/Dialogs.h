@@ -400,5 +400,17 @@ struct PICKFILTERINFO
   ZHANDLE hFilter{};
 };
 
+struct OpenSaveDlgContext
+{
+  WCHAR DefaultExt[128]{};
+  WCHAR FilterExt[128]{}; // "My File Type (*.xxa)|*.xxa"
+  WCHAR FilePathName[_MC_MAXPATH_]{}; // Selected full file path
+  WCHAR StartPath[_MC_MAXPATH_]{};// start path to show dialog 
+
+  bool HideReadonly = true;
+  bool OverwritePrompt = true;
+
+  bool AddAllFilterExt = true; // Add 'All Files(*.*)' filter to filter box
+};
 
 MCNSEND

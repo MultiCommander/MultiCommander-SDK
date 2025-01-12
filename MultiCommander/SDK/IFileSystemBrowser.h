@@ -158,6 +158,13 @@ public:
 #define FTREEVIEW_EXPANDONHOVERDRAG   0x00000002    // Expand Folder when hovering during drag and drop
 #define FTREEVIEW_SMARTEXPANDBOX      0x00000004    // Use Smart Expand box that only show expandbox if item have subfolders
 #define FTREEVIEW_AUTOHORZSCROLL      0x00000008    // Auto horizontal scroll to show as much of name as possible
+#define FTREEVIEW_HIGHLIGHT_CURRENT   0x00000010    // Highlight the current focus item
+#define FTREEVIEW_HIGHLIGHT_PARENT    0x00000020    // Highlight parent of item that is highlighted
+
+// Highlight style
+#define FTREEVIEW_HIGHLIGHT_BOLD       0x00000001
+#define FTREEVIEW_HIGHLIGHT_UNDERLINE  0x00000002
+#define FTREEVIEW_HIGHLIGHT_COLOR      0x00000004
 
 class __declspec(novtable) IFolderTreeView
 {
@@ -178,6 +185,8 @@ public:
   virtual void SetColor_NormalItem(COLORREF cr, COLORREF crBG = (COLORREF)-1) = 0;
   virtual void SetColor_FocusItem(COLORREF cr, COLORREF crBG = (COLORREF)-1) = 0;
 
+  virtual void SetColor_Highlight(COLORREF cr, COLORREF crBG = (COLORREF)-1) = 0;
+
   // must be false if Normal/Focus items background color is to be used.
   // set to true and the background color of Items will be ignored
   virtual void SetColor_OverrideBackgroundColor(bool b) = 0;
@@ -189,6 +198,9 @@ public:
 
   virtual void  SetOptions( DWORD dwOptions ) = 0;
   virtual DWORD GetOptions() = 0;
+
+  virtual void  SetHighlightStyle(DWORD dwOptions) = 0;
+  virtual DWORD GetHighlightStyle() = 0;
 
   virtual void SetDeviceFilter(const WCHAR* szDeviceFilter, DWORD dwDeviceTypes) = 0; // dwDeviceTypes == 0 for default
   virtual void GetDeviceFilter(WCHAR* szDeviceFilter, DWORD dwLen) = 0;

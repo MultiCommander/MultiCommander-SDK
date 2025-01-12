@@ -84,6 +84,11 @@ public:
   virtual bool GetItemText(OUT wchar_t* szText, long textSize, const MCNS::IWorkspaceItem2* pWorkspaceItem, DWORD nColumnId) = 0;
 
   virtual bool ItemDropped(IWorkspaceItem2* pParentItem, IFileItem* pDroppedItem) = 0;
+  virtual bool ItemRemoved(const MCNS::IWorkspaceItem2* pItem) = 0;
+
+  virtual bool AddContextMenuItems(HMENU hPopupMenu, MCNS::IWorkspaceItem2* pParent, int baseCmdId) = 0;
+  virtual bool OnContextMenuCommand(MCNS::IWorkspaceItem2* pItem, int cmdId) = 0;
+
   // All Items cleared.. If you got anything cached, Clear caches now
   virtual void OnAllCleared() = 0;
 };
@@ -95,6 +100,8 @@ public:
   virtual void SetCallback(MCNS::IFileWorkspaceCallback* pCallback) = 0;
 
   virtual MCNS::IWorkspaceItem2* AddItem(MCNS::IWorkspaceItem2* pParent, const wchar_t* targetPath, const wchar_t* displayName, DWORD attributes, MCNS::IFileWorkspaceExtendedItem* pItem, bool updateUI) = 0;
+  virtual bool RemoveItem(MCNS::IWorkspaceItem2* pItem) = 0;
+
   virtual void ClearAll() = 0;
 
   virtual void Refresh() = 0;
@@ -109,6 +116,8 @@ public:
   // return a collection of all item at path level
   virtual IPCollection* GetItems(const wchar_t* path) = 0;
   virtual MCNS::IPCollection* GetChilds(MCNS::PHANDLE hParent) = 0;
+
+  virtual MCNS::IWorkspaceItem2* FindItem(MCNS::IWorkspaceItem2* pParent, const wchar_t* szName) = 0;
 
   
 };

@@ -588,8 +588,9 @@ DWORD MCFSSampleStream::GetOptionalFunctions()
   return IVF_GETSIZE; // Support of Folder sizing.
 }
 
-BOOL MCFSSampleStream::GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size , volatile bool* /*bAbort */)
+BOOL MCFSSampleStream::GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size, bool followLinks, volatile bool* /*bAbort */)
 {
+  UNREFERENCED_PARAMETER(followLinks);
   UNREFERENCED_PARAMETER(szFilter);
 
   szPath = RemoveDeviceFromPath(szPath);

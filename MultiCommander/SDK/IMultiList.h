@@ -48,6 +48,7 @@ public:
 #define MCLPM_CHECKEDFOCUS   0x0020  // Set/Get the color for checked items in focus
 #define MCLPM_GRIDLINE       0x0100  // Set/Get the color for the gridlines
 #define MCLPM_FOCUSRECT      0x0200  // Set/Get the color for the focus rectangle
+#define MCLPM_HIGHLIGHT      0x0400  // Set/Get the color for the highlight
 #define MCLPM_ACTIVEBG       0x1000  // Set/Get the color for the Active Background
 #define MCLPM_ACTIVEALTBG    0x2000  // Set/Get the color for the Active Alternative background
 #define MCLPM_INACTIVEBG     0x4000  // Set/Get the color for the Inactive Background
@@ -84,6 +85,9 @@ struct MultiListColorProfile
 
   COLORREF crCheckedFG;
   COLORREF crCheckedBG;
+
+  COLORREF crHighlightFG;
+  COLORREF crHighlightBG;
 
   COLORREF crCheckedFocusFG;
   COLORREF crCheckedFocusBG;

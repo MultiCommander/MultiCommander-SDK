@@ -72,21 +72,22 @@ class IVolumeCommandResult;
 #define FSDROP_REFRESHPATH    0x00000010L // Refresh current path
 
 // GetOptionalFunctions() flags
-#define IVF_GETSIZE          0x00000002  // Has GetSize function
+#define IVF_GETSIZE          0x00000002  // Has GetSize function (or IVF_GETDEVICEITEMSIZE below)
 #define IVF_VIRTUAL_GETICON  0x00000004  // Virtual Item do not need to be Real file items. it can be registry entries, or meta information or what ever.
 // Then when showing it in the filebrowser, No icon will will be shown since it is not files. 
 // So if file items are Virtual and This flag is set on the volume then the volume will be able to 
 // provide a ICON.. both HICON and a Icon Matcher. 
 
-#define IVF_EXECUTEFILE      0x00000008  // IVolume->Execute(..) supported
-#define IVF_CONNECT          0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP Volume)
-#define IVF_ASSIGN2NUMDEVICE 0x00000020  // Auto Assign device to a Num Device ( 0: -> 9: ) (Require IVG_CONNECT to )
-#define IVF_CMDLINE          0x00000040  // Volume support it own command line commands.
-#define IVF_HASPACKCONFIGDLG 0x00010000  // if set then ShowPackOptionDlg(...) can be called 
-#define IVF_HASSETTINGSUI    0x00100000  // Volume can show its own Settings UI     (Menu option for this will be auto added under Menu>Configuration>FileSystems)
-#define IVF_GENERICSETTINGS  0x00200000  // Volume support the generic Settings UI. (Menu option for this will be auto added under Menu>Configuration>FileSystems)
-#define IVF_STORAGEINFO      0x01000000  // Volume support FreeSpace information
-#define IVF_DROPHANDLING     0x02000000  // Volume support RAW drop Handling  OnAcceptDrop(..), OnDrop(..)
+#define IVF_EXECUTEFILE       0x00000008  // IVolume->Execute(..) supported
+#define IVF_CONNECT           0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP Volume)
+#define IVF_ASSIGN2NUMDEVICE  0x00000020  // Auto Assign device to a Num Device ( 0: -> 9: ) (Require IVG_CONNECT to )
+#define IVF_CMDLINE           0x00000040  // Volume support it own command line commands.
+#define IVF_HASPACKCONFIGDLG  0x00010000  // if set then ShowPackOptionDlg(...) can be called 
+#define IVF_HASSETTINGSUI     0x00100000  // Volume can show its own Settings UI     (Menu option for this will be auto added under Menu>Configuration>FileSystems)
+#define IVF_GENERICSETTINGS   0x00200000  // Volume support the generic Settings UI. (Menu option for this will be auto added under Menu>Configuration>FileSystems)
+#define IVF_STORAGEINFO       0x01000000  // Volume support FreeSpace information
+#define IVF_DROPHANDLING      0x02000000  // Volume support RAW drop Handling  OnAcceptDrop(..), OnDrop(..)
+#define IVF_GETDEVICEITEMSIZE 0x04000000  // Volume support GetDeviceItemSize(..) function
 //===========================================================================================================
 // Volume Supported Operations Flags
 
@@ -495,6 +496,17 @@ public:
   
 };
 
+class __declspec(novtable) IGetDeviceItemSizeCallback
+{
+public:
+  virtual ~IGetDeviceItemSizeCallback() = default;
+
+  virtual void Report(const UINT64 nSize) = 0;
+  virtual void Report(const UINT64 nSize,  const UINT64 numFolders, const UINT64 numFiles) = 0;
+
+  virtual bool AbortRequested() = 0;
+};
+
 #pragma warning( push )
 #pragma warning( disable : 4100 ) // warning C4100: '<parameter>' : unreferenced formal parameter
 
@@ -618,7 +630,7 @@ public:
 
   // Return an icon in pIcon for the file extension ( one that is associated with this Volume Interface )
   // This is optional. return false and system will use default. ( Only called if window shell does not return any icon )
-  // Destory icon will be called on pIcon if GetIcon(..) returns true. when the icon has been copied and added to the internal cache
+  // Destroy icon will be called on pIcon if GetIcon(..) returns true. when the icon has been copied and added to the internal cache
   // dwFlags = VFICON_xxxx - Icon size
   virtual bool  GetIcon(HICON* pIcon, const WCHAR* fileExtension, MCIconSize iconSize) = 0;
 
@@ -773,7 +785,10 @@ public:
   // return size (in size parameter) of file or folder. if folder it should scan recursive and use filter
   // return TRUE if successful or FALSE if not
   // you should check if bAbort goes FALSE. if it does user have chosen to break this operation
-  virtual BOOL GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size , volatile bool *bAbort ) = 0;
+  virtual BOOL GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size, bool followLinks, volatile bool *bAbort ) = 0;
+
+  // call if device support IVF_GETDEVICEITEMSIZE
+  virtual BOOL GetSizeEx(const WCHAR* szPath, const WCHAR* szFilter, bool followLinks, IGetDeviceItemSizeCallback* pCallback) { return false; }
 
   // if bReadCofig is FALSE then show Write Config
   // dwConfigValue is in/out value of config flags that can be changed by the dialog

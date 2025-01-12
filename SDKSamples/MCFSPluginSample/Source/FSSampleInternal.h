@@ -89,7 +89,7 @@ public:
   // return size (in size parameter) of file or folder. if folder it should scan recursive and use filter
   // return TRUE if successful or FALSE if not
   // you should check if bAbort goes FALSE. if it does user have chosen to break this operation
-  BOOL GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size , volatile bool *bAbort ) override;
+  BOOL GetSize( const WCHAR* szPath , const WCHAR* szFilter , /*[out]*/ INT64& size, bool followLinks, volatile bool *bAbort ) override;
 
   BOOL ShowConfigDlg( DWORD& dwConfigValue , BOOL bReadConfig = TRUE , BOOL* bSaveAsDefault = NULL ) override;
 

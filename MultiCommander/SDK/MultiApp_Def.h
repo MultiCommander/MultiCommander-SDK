@@ -421,6 +421,15 @@ MCNSBEGIN
 #define ZFVX_CLOUD_STATE_ATTRIB 86
 #define ZFVX_REPARSE_TAG        87
 
+// Require folder calcuation has been done before
+#define ZFVX_NUMSUBFILES 90
+#define ZFVX_NUMSUBFOLDERS 91
+#define ZFVX_NUMSUBFILESANDFOLDERS 92
+
+#define ZFVX_ISFOLDEREMPTY       95
+#define ZFVX_FOLDER_HAVE_FILES      96
+#define ZFVX_FOLDER_HAVE_FILES_SUB  97 // recursive
+
 // Custom script columns
 #define ZFVX_SCIPTCOL_1  100
 #define ZFVX_SCIPTCOL_2  101

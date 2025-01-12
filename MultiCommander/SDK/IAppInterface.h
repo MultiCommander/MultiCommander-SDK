@@ -441,6 +441,9 @@ public:
   // Color is set in pColorPickInfo dialog
   virtual bool      ShowColorPickDlg(MCNS::COLORPICKINFO* pColorPickInfo) = 0;
 
+  virtual bool      ShowOpenFileDialog(OpenSaveDlgContext& context) = 0;
+  virtual bool      ShowSaveFileDialog(OpenSaveDlgContext& context) = 0;
+
   // Show Pick Filter dialog. User can specify a simple filter. or pick a defined global filter
   // a FilterHandle is returned
   virtual bool      ShowPickFilterDlg(MCNS::PICKFILTERINFO* pPickFilterInfo) = 0;
