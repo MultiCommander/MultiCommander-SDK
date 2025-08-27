@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * 
@@ -28,9 +28,9 @@ public:
   virtual void  Reset() = 0; // set internal next pointer to first
   virtual XHANDLE Next()  = 0;
   //
-  virtual DWORD    Count() = 0;
-  virtual XHANDLE GetAt( DWORD nIndex ) = 0;
-  virtual void  Clear();
+  virtual DWORD    Count()  const = 0;
+  virtual XHANDLE GetAt( DWORD nIndex ) const = 0;
+  virtual void  Clear() = 0;
 
   // deletes instance
   virtual void Release() = 0;
@@ -47,9 +47,9 @@ public:
   virtual void  Reset() = 0; // set internal next pointer to first
   virtual PHANDLE Next() = 0;
   //
-  virtual DWORD    Count() = 0;
+  virtual DWORD    Count() const = 0;
   virtual PHANDLE GetAt(DWORD nIndex) = 0;
-  virtual void  Clear();
+  virtual void  Clear() = 0;
 
   // deletes instance
   virtual void Release() = 0;
@@ -62,11 +62,11 @@ class __declspec(novtable) ITextValueCollection
 public:
   virtual void  Add( const WCHAR* strText, INT64 value ) = 0;
 
-  virtual bool Exists(const WCHAR* strText) = 0;
-  virtual DWORD Count() = 0;
+  virtual bool Exists(const WCHAR* strText) const = 0;
+  virtual DWORD Count() const = 0;
   virtual void  Clear() = 0;
 
-  virtual BOOL  GetAt(DWORD nIndex, WCHAR* strText, int strMaxLen,INT64& value) = 0;
+  virtual BOOL  GetAt(DWORD nIndex, WCHAR* strText, int strMaxLen,INT64& value) const = 0;
 
   // deletes instance
   virtual void Release() = 0;
@@ -84,13 +84,13 @@ public:
   // replace a key (if it exists) with a new value
   virtual void  Replace( const WCHAR* strKey , const WCHAR* strVal ) = 0;
 
-  virtual bool  KeyExists(const WCHAR* szKey, bool bCaseSensative = true) = 0;
-  virtual int   GetKeyIdx(const WCHAR* strKey, bool bCaseSensative = true) = 0;
+  virtual bool  KeyExists(const WCHAR* szKey, bool bCaseSensative = true) const = 0;
+  virtual int   GetKeyIdx(const WCHAR* strKey, bool bCaseSensative = true) const = 0;
 
-  virtual DWORD Count() = 0;
-  virtual BOOL  GetAt( DWORD nIndex , WCHAR* strKey , WCHAR* strVal , int strMaxLen ) = 0;
+  virtual DWORD Count() const = 0;
+  virtual BOOL  GetAt( DWORD nIndex , WCHAR* strKey , WCHAR* strVal , int strMaxLen ) const = 0;
   // get the value that matches strKey ( not case sensitive )
-  virtual BOOL  Get( const WCHAR* strKey , WCHAR* strVal , int strMaxLen , BOOL bCaseSensative ) = 0;
+  virtual BOOL  Get( const WCHAR* strKey , WCHAR* strVal , int strMaxLen , BOOL bCaseSensative ) const = 0;
 
   virtual void  Clear() = 0;
   // deletes instance
@@ -114,11 +114,11 @@ public:
   virtual void  Remove( const WCHAR* strVal ) = 0;
   virtual void  RemoveAll() = 0;
 
-  virtual bool  Find( const WCHAR* strVal , /*[out]*/ DWORD* pIndex) = 0;
-  virtual bool  FindNoCase( const WCHAR* strVal , /*[out]*/ DWORD* pIndex) = 0;
+  virtual bool  Find( const WCHAR* strVal , /*[out]*/ DWORD* pIndex)  const = 0;
+  virtual bool  FindNoCase( const WCHAR* strVal , /*[out]*/ DWORD* pIndex)  const = 0;
 
-  virtual DWORD Count() = 0;
-  virtual bool  GetAt( DWORD nIndex , WCHAR* strVal , int strMaxLen ) = 0;
+  virtual DWORD Count()  const  = 0;
+  virtual bool  GetAt( DWORD nIndex , WCHAR* strVal , int strMaxLen ) const = 0;
 
   // Reverse the data in the Collection
   virtual void  Reverse() = 0;
@@ -164,7 +164,7 @@ public:
 
   // Return how many items it found that it inserted into pFoundItems
   // bClearMatches will set found items that are inserted into pFoundItems to NULL. (thread safe, But not if you are removing.)
-  virtual DWORD       FindItems(IFileItemCollection* pFoundItems, const WCHAR* strMatch, bool bRemove = false , bool bClearMatching = false, bool bFastCheck = false) = 0;
+  virtual DWORD       FindItems(IFileItemCollection* pFoundItems, const WCHAR* strMatch, bool bRemove = false , bool bClearMatching = false, bool bFastCheck = false)= 0;
 
   virtual bool    Remove( IFileItem* pFileItem ) = 0;
 

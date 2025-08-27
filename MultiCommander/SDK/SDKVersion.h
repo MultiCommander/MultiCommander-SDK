@@ -2,7 +2,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
   Defines what interface version the extensions/plugins are built with.
@@ -45,13 +45,13 @@
 #pragma once
 
 // MIV = MULTI_INTERFACE_VERSION
-#define MIV_FRAMEWORK   1
+#define MIV_FRAMEWORK   2
 
-#define MIV_MAJOR       100
+#define MIV_MAJOR       4
 #define MIV_MINOR       0
 #define MIV_MICRO       0
 
 //  91300         // 1.2.3.4 => 01.02.03.04 => 1020304 ,  90930 = 0.9.9.30
 #define MULTI_INTERFACE_VERSION (DWORD)((MIV_FRAMEWORK * 1000000) + (MIV_MAJOR * 10000) +(MIV_MINOR * 100) + MIV_MICRO)
-#define MULTI_INTERFACE_VERSION_DOTTED  "1.100.0.0"  
+#define MULTI_INTERFACE_VERSION_DOTTED  "2.4.0.0"  
 

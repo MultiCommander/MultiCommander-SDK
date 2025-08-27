@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  */
@@ -317,6 +317,8 @@ public:
 // pButtons is ASSUMED to be 4xDWORD pointer. ( DWORD myButtons[4] )
   virtual DWORD ShowErrorDlg(int nErrorCode, DWORD dwBtnFlags[4], const WCHAR* strErrorText) = 0;
   virtual bool  ShowAskPasswordDlg(const WCHAR* szCaption, const WCHAR* szText, const WCHAR* szCueText, WCHAR* szPassword, int nPasswordLen) = 0;
+
+  virtual DWORD ShowMessageBox(const WCHAR* strText, const WCHAR* strCaption, UINT nType) = 0;
 };
 
 class IAppConnection
@@ -339,8 +341,9 @@ class IFileOperationExtensionContext
 public:
   virtual                              ~IFileOperationExtensionContext() = default;
 
-  // Request to abort the file operation (copy/move/delete)
+  // User have Request to abort/pause the file operation (copy/move/delete)
   virtual bool                         AbortRequested() = 0;
+  virtual bool                         PauseRequested() = 0;
 
   virtual MCNS::IFileInfo*             CreateFileInfo(const TCHAR* szFilepath) = 0;
   virtual MCNS::IFileInfo*             CreateFileInfo(MCNS::ZFILEINFO* pFileInfo) = 0;
@@ -352,6 +355,7 @@ public:
   virtual IFileOperationErrorHandling* FileOperationErrorHandling() = 0;
   virtual IAppConnection*              AppConnection() = 0;
 
+	// duplicated from IAppConnection
   virtual IMultiLogger* Logger() = 0;
   virtual IDialogService* DialogService() = 0;
 };

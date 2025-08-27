@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -52,8 +52,10 @@ class IRenameItems;
 #define DEVICETYPE_ALL          0xFFFFFFFF
 
 // Device Flags
-#define DEVF_FREESPACE_EMPTY    0x0010
-#define DEVF_FREESPACE_NOTAVAIL 0x0020
+#define DEVF_FREESPACE_EMPTY      0x0010 // Show Empty free space information
+#define DEVF_FREESPACE_NOTAVAIL   0x0020 // Show free space as "Free space information no available"
+#define DEVF_FREESPACE_NUMDEVICE  0x0040 // Show free space if NumDevice. Else it will be as DEVF_FREESPACE_EMPTY ( eg FTP: / SFTP: show bookmarks. and empty space. connected SFTP: are shown as 0:, 1: and so on and shows free space )
+#define DEVF_FREESPACE_ONLYFREE   0x0080 // Can show free space but does not provide total space.. so will not show % free and such
 
 // Used in IFileSystemManager::RenameFiles (...)
 class __declspec(novtable) IRenameResultCallback
@@ -96,11 +98,13 @@ public:
   // Add virtual device to the DeviceManagment system ( will show the device in the DeviceCombo or DeviceToolbar )
   // DO NOT use hIconSmall, hIconLarge here.pass 0 here and use AddVirtualDeviceIcons below to set icon for all 4 supported sizes
   virtual bool AddVirtualDevice( const WCHAR* displayName, const WCHAR* rootPath, HICON hIconSmall, HICON hIconLarge, const WCHAR* tooltip = NULL, DWORD dwDeviceFlags = 0 ) = 0;
+	virtual bool  RemoveVirtualDevice(const WCHAR* szDevice) = 0;
 
   // Add Icon for virtual device
   virtual int   AddVirtualDeviceIcon(const WCHAR* szDevice, MCIconSize iconSize, HICON hIcon) = 0;
   virtual bool  AddVirtualDeviceIcons(const WCHAR* szDevice, HICON hIconSmall, HICON hIconMedium, HICON hIconLarge, HICON hIconXLarge) = 0;
 
+  virtual void UpdateDeviceUI() = 0;
   // Attach a Toolbar to the DeviceManager. it will keep a drive toolbar update. NO other buttons and other item my be added to the same toolbar.
   // hToolbar = handle to a empty toolbar
   // hCmd is the command that will be sent when use click on drives on this toolbar

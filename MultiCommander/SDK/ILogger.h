@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -38,6 +38,8 @@ public:
   // Connect the logger to the exiting FileSystemLog
 
   virtual void InitFileSystemLog(); 
+  virtual void InitAppLog();
+
   // bCreateNew : true if it already should create a new. if a log with existing name already exist a new log with same name will be created. else it will use same log.
   // szLogFilename : Filename of the log. (NO path should be giving. the log will be stored in the log folder. )
   virtual bool Init(bool bCreateNew, const WCHAR* szLogName, DWORD nLogSizeKB, bool bSaveToFile, const TCHAR* szLogFilename = NULL, LogOptions::Encoding encoding = LogOptions::ASCII) = 0;

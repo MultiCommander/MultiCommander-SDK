@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -402,6 +402,10 @@ MCNSBEGIN
 
 #define ZFVX_EXPANEL_ROW    60  // Explorer Panel - Row No
 
+#define ZFVX_DATECREATE_UTC  61
+#define ZFVX_DATEMODIFY_UTC  62
+#define ZFVX_DATEACCESS_UTC  63
+
 // System.Document.*
 #define ZFVX_DOCUMENT_AUTHOR    70
 #define ZFVX_DOCUMENT_TITLE     71
@@ -446,6 +450,7 @@ MCNSBEGIN
 #define ZFV_CF_ALLOW_OVERDRAW   0x0400 // allow this column to be overdraw by previous if this column text is empty
 #define ZFV_CF_SORT_DECENDING   0x0800 // if set it will sort descending as default
 #define ZFV_CF_STRECH           0x1000
+#define ZFV_CF_DONT_CONVERT_DATE 0x2000 
 
 
 // Filemanager Filesize type

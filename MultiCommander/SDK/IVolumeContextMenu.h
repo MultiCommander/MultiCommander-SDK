@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -22,7 +22,7 @@ public:
 
   // dwCommandID must be minimum of 11000 and Maximum of 39000
   virtual MCNS::ZHANDLE AddSubMenu(MCNS::ZHANDLE hParentMenu, const WCHAR* label) = 0;
-  virtual ZHANDLE AddMenu(ZHANDLE hParentMenu, const WCHAR* label, DWORD dwCommandID, DWORD dwFlags) = 0;
+  virtual ZHANDLE AddMenu(ZHANDLE hParentMenu, const WCHAR* label, DWORD dwCommandID, DWORD dwFlags, bool labelItem) = 0;
   virtual ZHANDLE AddSeperator(ZHANDLE hParentMenu) = 0;
 };
 

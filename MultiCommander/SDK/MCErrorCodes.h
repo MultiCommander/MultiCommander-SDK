@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Error codes 
@@ -62,10 +62,12 @@ MCNSBEGIN
 #define VERROR_VOLUME_FULL        40L // Volume is full (use the error code above in most cases instead.)
 #define VERROR_VOLUME_BADFORMAT   41L // Volume file is bad. corrupt or invalid format.
 #define VERROR_VOLUME_NOTFOUND    42L // Can open volume. Corrupt or bad volume file.
-
+#define VERROR_VOLUME_BUSY        43L // Volume is busy and cannot process request
+#define VERROR_VOLUME_LOCKED      45L // Volume is locked (bitlocker)
   //#define VERROR_FOLDER_NOT_EMPTY   50L // Can not Delete folder. folder not empty
 
 #define VERROR_CONNECTION_LOST      55  // Connection to volume is lost (eg if connect to FTP or other remote conection is lost)
+#define VERROR_TIMEOUT              59
 #define VERROR_OP_TIMEOUT_TRYAGAIN  60  // Operation took long time and timed out, but try again later 
   // Eg ReadFile/WriteFile operation on IRWFile can return this if a read/write takes too long. 
   // This so we can handle abort/skip request from the user. ( good for slow volumes likes FTP)
@@ -80,6 +82,8 @@ MCNSBEGIN
 #define VERROR_PATH_INVALID_CHAR  121 // Path is Invalid. Invalid characters in Path
 #define VERROR_INVALID_PATH_NAME  123 // The filename, directory name, or volume label syntax is incorrect.
 #define VERROR_INVALID_PATH_OR_VOLUME 124
+
+#define VERROR_TARGET_NOT_ALLOWED   143 // Target file failed. File not allowed.
 
 #define VERROR_CANT_OPEN_SOURCEVOLUME 150 // Can open volume.. pVolume->Open( path ) failed..
 #define VERROR_CANT_OPEN_TARGETVOLUME 151 // Can open volume.. pVolume->Open( path ) failed..
@@ -112,6 +116,7 @@ MCNSBEGIN
 #define VERROR_EXISTS_NOT_SAME_ROOTPATH 181 // Exists Function - Not Same Rootpath.. can't check if path exists.. 
 #define VERROR_NOT_SAME_ROOTVOLUME      182 // (ERROR_NOT_SAME_DEVICE 17 )
 
+
 #define VERROR_AUTORENAME_FAILED        183
 #define VERROR_COMMAND_FAILED            186
 #define VERROR_FAILED_TO_OPEN_CONNECTION 187  // eg FTP error 425
@@ -119,6 +124,8 @@ MCNSBEGIN
 #define VERROR_INVALID_PARAMETERS            197L
 #define VERROR_NOTIMPLEMENTED                198L
 #define VERROR_ABORT_FILEOPERATION           199L
+
+#define VERROR_COMPRESS_METHOD_UNSUPPORTED    250L 
 
 #define VERROR_CANCELLED_BY_USER        ERROR_CANCELLED // 1223
 #define VERROR_READERROR_AUTORETRY      3500L // Some read error happen. But Just autoretry

@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * IVolume - Interface to inherit from when creating a FileSystem Plugin
@@ -174,7 +174,7 @@ class IVolumeCommandResult;
 //#define VSO_READ_PASSWORD      0x10000000  // Volume support Password for reading (unpacking) items. (eg. password protected Zip, 7Zip archive for example)
 //#define VSO_WRITE_PASSWORD     0x20000000  // Volume support Password for writing (packing) items. (eg. password protected Zip, 7Zip archive for example)
 
-#define VSO_FREESPACE_NOTAVAIL 0x40000000  // Free space information is not available for this volume
+#define VSO_FREESPACE_NOTAVAIL 0x40000000  // Free space information is not available for this volume ( BUT if 
 // Only valid if you have a Volume that is connected to a device like FTP:, REG: or somethings.
 // 
 //===========================================================================================================
@@ -600,7 +600,7 @@ public:
   // szDevicePath = \pub\sys
   // szDisplayName = "MySite (FTP)"
   // pIcon = Icon for the item
-  virtual BOOL GetAssign2NumDeivcePaths(const WCHAR* /*path*/, WCHAR* OUT /*szInternalDevicePath*/, WCHAR* OUT /*szDevicePath*/, WCHAR* OUT /*szDisplayName*/,  DWORD /*nLen*/, HICON* OUT /*pIcon*/) { return FALSE; }
+  virtual BOOL GetAssign2NumDevicePaths(const WCHAR* /*path*/, WCHAR* OUT /*szInternalDevicePath*/, WCHAR* OUT /*szDevicePath*/, WCHAR* OUT /*szDisplayName*/,  DWORD /*nLen*/, HICON* OUT /*pIcon*/, OUT DWORD& dwExtraDeviceFlagInfo) { return FALSE; }
 
   ///////////////////[ Override this functions if the IVolume is of type EXT_VDEVICEFS ]////////////////////////////
 
@@ -790,9 +790,7 @@ public:
   // call if device support IVF_GETDEVICEITEMSIZE
   virtual BOOL GetSizeEx(const WCHAR* szPath, const WCHAR* szFilter, bool followLinks, IGetDeviceItemSizeCallback* pCallback) { return false; }
 
-  // if bReadCofig is FALSE then show Write Config
-  // dwConfigValue is in/out value of config flags that can be changed by the dialog
-  virtual BOOL ShowConfigDlg( DWORD& dwConfigValue , BOOL bReadConfig = TRUE , BOOL* bSaveAsDefault = nullptr) = 0;
+  virtual BOOL ShowConfigDlg(MCNS::IMultiAppInterface* pInterface) = 0;
 
   ///========================================================================================================
   // Internal Batch file operations methods. 
@@ -821,6 +819,9 @@ public:
   // Require that flag VSO_GETFILE / VSO_PUTFILE, (Eg used by FSPortable )
   virtual DWORD   PutFile(const WCHAR* szLocalFile, const WCHAR* szTargetPath, DWORD dwFlags, IProgress* pProgress) { return VERROR_NOTIMPLEMENTED; }
   virtual DWORD   GetFile(const WCHAR* szLocalFile, const WCHAR* szSourceFile, DWORD dwFlags, IProgress* pProgress) { return VERROR_NOTIMPLEMENTED; }
+
+  virtual DWORD   PutFileEx(const WCHAR* szLocalFile, const WCHAR* szTargetPath, DWORD dwFlags, IFileOperationExtensionContext* /*pFOEContext*/) { return VERROR_NOTIMPLEMENTED; }
+  virtual DWORD   GetFileEx(const WCHAR* szLocalFile, const WCHAR* szSourceFile, DWORD dwFlags, IFileOperationExtensionContext* /*pFOEContext*/) { return VERROR_NOTIMPLEMENTED; }
 
   // When the user select to configure settings for Volume type. It is up to the Volume to show a configuration UI.
   // Only called if volume has flag

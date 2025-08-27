@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -106,8 +106,8 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 #define ZFF_EXT_NOTUSED1      0x0000000200000000ui64
 #define ZFF_EXT_NOTUSED2      0x0000000400000000ui64
 #define ZFF_EXT_NOTUSED3      0x0000000800000000ui64
-#define ZFF_EXT_NOTUSED4      0x0000001000000000ui64
-#define ZFF_EXT_NOTUSED5      0x0000002000000000ui64
+#define ZFF_GROUPED_ITEM      0x0000001000000000ui64 // Item is as grouped item from VFG. (Used for example in Virtual Folder Groups)
+#define ZFF_GROUPED_NOTSYNC   0x0000002000000000ui64 // Item is as grouped item from VFG. Item is not synced, Not all Folders have this item.
 #define ZFF_EXT_NOTUSED6      0x0000004000000000ui64
 #define ZFF_EXT_NOTUSED7      0x0000008000000000ui64
 #define ZFF_EXT_PSW_PROTECTED 0x0000010000000000ui64 // Item is password protected, Need password to open (eg Item inside protected zip)
@@ -115,10 +115,10 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 #define ZFF_EXT_NOTUSED10     0x0000040000000000ui64 
 #define ZFF_EXT_NOTUSED11     0x0000080000000000ui64
 #define ZFF_EXT_NOTUSED12     0x0000100000000000ui64
-#define ZFF_EXT_NOTUSED13     0x0000200000000000ui64
+#define ZFF_EXT_NOTUSED13     0x0000200000000000ui64 // This is a group item. (VFG - VIrtual Folder Group item) - If real path is required it need to be ask for by calling filesystemmanager->GroupItems
 #define ZFF_CLOUD             0x0000400000000000ui64 // Cloud Drive (onedrive) Item is probably on a cloud synced folder (onedrive) (check ZFF_RECALONDATAACCESS if data is accessable)
 #define ZFF_EXT_NOTUSED14     0x0000800000000000ui64
-#define ZFF_EXT_NOTUSED15     0x0001000000000000ui64
+#define ZFF_UNIX_ATTRIBUTE    0x0001000000000000ui64 // There are extended linux attribute for this file item for -RW-RWXRWX like permission data
 #define ZFF_PLACEHOLDER       0x0002000000000000ui64 // Placeholder file are fake files with have a size but do not actually take up any room. (New from Win8.1, Used in Win8.1 for Skydrive/OneDirve folder, Removed in Windows 10)
 #define ZFF_SHORTCUT          0x0004000000000000ui64 // Item is a .lnk shortcut file
 #define ZFF_SHORTCUTFOLDER    0x0008000000000000ui64 // Shortcut file links to a folder.
@@ -162,6 +162,9 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
   #define ZEXTPROP_LINKTARGET_TYPE_URL  2
 #define ZEXTPROP_FILECOUNT   43
 #define ZEXTPROP_FOLDERCOUNT 44
+
+#define ZEXTPROP_UNIXPERMISSIONS 45
+#define ZEXTPROP_GROUPITEM_REFPATH 46 // Group Item Reference Path (primary path) - Used for VFG (Virtual Folder Group) items
 
 #define ZF_TAG1   0x01
 #define ZF_TAG2   0x02
@@ -257,12 +260,14 @@ public:
   // OnDemand  items 
   [[nodiscard]] virtual bool IsOnlineOnly() const = 0;
   [[nodiscard]] virtual bool IsLocalAvailable() const = 0;
-  [[nodiscard]] virtual bool IsAlreadyAvailable() const = 0;
+  [[nodiscard]] virtual bool IsAlwaysAvailable() const = 0;
   [[nodiscard]] virtual bool IsOnDemandItem() const = 0;
 
 
   virtual DWORD Set_FileData( const WCHAR* strName , const WCHAR* strComment ,  INT64 i64Size , UINT64 dwAttribute , const FILETIME* pftWriteTime, const FILETIME* pftCreateTime, const FILETIME* pftAccessTime ) = 0;
   virtual BOOL  Set_FindData( WIN32_FIND_DATA* pFindData ) = 0;
+  virtual BOOL  Set_FindData(WIN32_FIND_DATA* pFindData, UINT64 dwExtraAttributes) = 0;
+  virtual void Remove_Attributes(const UINT64 lAttrib) = 0;
 
   [[nodiscard]] virtual  short GetVolumeID() const = 0;
 

@@ -1,13 +1,8 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2024 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
  * =======================================================================================
- * 
- * 
- * Changes
- * ---------------------
- * 2013-10-21 - ADDED - GetTabSettings
  */
 
 #pragma once
@@ -39,6 +34,7 @@ class IFilePropertiesRetriever;
 class IEventCallback;
 class IFrameWindow;
 class IDataViewerWindow;
+class IFileOperationService;
 
 // Flags for CreateZipArchive(...)
 #define MC_CZA_LOG2APPLOG   0x00000100L // Log creating of zip to AppLog.
@@ -109,6 +105,7 @@ public:
 
   // Is the tab that has the UI component view active ? (Must be a view that is directly located in the tab. not a child view item.)
   virtual bool  IsTabActive( ZHANDLE hView ) = 0;
+  virtual int   TabIndex(ZHANDLE hView) = 0;
   virtual bool  IsSource() = 0;
 
   // true if any of the requested side are active/in focus
@@ -178,6 +175,10 @@ public:
   virtual IAppConfig*     GetAppConfig() = 0;
   // Session Config - Read/Write Session configuration
   virtual ISessionConfig* GetSessionConfig() = 0;
+
+  // Create an advanced file opertion process
+  // Kill it by calling pFileOperation->Release();
+  virtual IFileOperationService* CreateFileOperationService() = 0;
 
   // Store a temporary string in a temp storage. This is so that Strings can be send using POST method.
   // dwHoldTime is time in ms that the string is valid for. after this time the string CAN be removed from the storage.
@@ -295,7 +296,7 @@ public:
   virtual BOOL    SetCommandLine(const WCHAR* szCommand, bool bAppend = false, bool bTakeInputFocus = false) = 0;
 
   // Create UI View (Will be located inside a Tab. )
-  virtual ZHANDLE Create( long CreateType , long CreateParam , long TextID , long IconIdx , DWORD_PTR param1=0 , DWORD_PTR param2=0, ZHANDLE hParent=0 , DWORD dwInitValues = 0) = 0;
+  virtual ZHANDLE Create( long CreateType , long CreateParam , long TextID , long IconIdx , DWORD_PTR param1=0 , DWORD_PTR param2=0, ZHANDLE hParent=0 , DWORD dwInitValues = 0, int insertAt = -1) = 0;
   // Create UI View and return matching Interface 
   virtual void*   CreateQI(long CreateType , long CreateParam , long TextID , long IconIdx , DWORD_PTR param1=0 , DWORD_PTR param2=0, ZHANDLE hParent=0 ) = 0;
   virtual BOOL    Destory(long lCreateType , ZHANDLE hView ) = 0;
@@ -421,6 +422,7 @@ public:
   virtual bool  ShowGenericComboDlg( GENERICCOMBOBOX* pComboBox ) = 0;
   virtual bool  ShowMultiComboDlg( MULTICOMBOBOXDLG* pMultiComboDlg) = 0;
   virtual bool  ShowAskTextDlg(const WCHAR* caption, const WCHAR* title, const WCHAR* text, const WCHAR* cuebanner, WCHAR* szResult, int nResLen, HWND hwdParent = 0, bool bPasswordMode = false) = 0;
+  virtual bool  ShowAskPasswordDlg(const wchar_t* szCaption, const wchar_t* text, const wchar_t* cueText, wchar_t* szPaddword, int passLen) = 0;
 
   // Options .. SED_
   virtual UINT      ShowErrorDialog(DWORD nErrorCode, const WCHAR* szItemName, DWORD dwOptions) = 0;
@@ -527,6 +529,14 @@ public:
 
   // if szfilename is nullptr, then version info for MultiCommander is returned
   virtual void GetVersionInfo(VersionInfo* versionInfo, const wchar_t* szFilename) = 0;
+
+  virtual bool WriteToTextFileAscii(const TCHAR* filename, const TCHAR* szText) = 0;
+  virtual bool WriteToTextFileAscii(const TCHAR* filename, const char* szText) = 0;
+  virtual bool WriteToTextFileUnicode(const TCHAR* filename, const TCHAR* szText, bool bWriteBOM = true) = 0;
+
+  // Warning . Only use for small files. will write entire data as one chunk. large data > 10 MB will halt I/O for other processes
+  virtual bool WriteToBinaryFile(const TCHAR* szFilename, const BYTE* pData, DWORD dwDataLen, const FILETIME* fp = nullptr) = 0;
+
 };
 
 MCNSEND
