@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  */
@@ -224,8 +224,9 @@ public:
   // strPathItem - Path to an path item that should update when UpdatePath() is run
   // bRemoved    - If item is removed
   // bChanged    - If Item is changed (in size/date/attributes)
-  virtual void UpdatePathItem(const WCHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh) = 0;
-  virtual void UpdatePathItem(const CHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh) = 0;
+  // bAnyChild   - bRefresh also need to be true, then refresh all views showing item or anychild of item
+  virtual void UpdatePathItem(const WCHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh, bool bAnyChild = false) = 0;
+  virtual void UpdatePathItem(const CHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh, bool bAnyChild = false) = 0;
   virtual void UpdateParentPathItem(const WCHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh) = 0;
   virtual void UpdateParentPathItem(const CHAR* strPathItem, bool bRemove, bool bChanged, bool bRefresh) = 0;
   virtual void UpdatePath(bool bForce) = 0;
@@ -354,6 +355,8 @@ public:
   virtual IFileSystemOperation*        FileSystemOperations() = 0;
   virtual IFileOperationErrorHandling* FileOperationErrorHandling() = 0;
   virtual IAppConnection*              AppConnection() = 0;
+
+  virtual const wchar_t*               GetTargetPath() = 0;
 
 	// duplicated from IAppConnection
   virtual IMultiLogger* Logger() = 0;

@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -48,7 +48,7 @@ public:
   // Run when MC is starting up.
   // Override and add code to register property types in here
   virtual long PreStartInit( IMultiAppInterface* /*pInterface*/ ) { return 0; }
-
+  virtual void OnShutdown() { return; }
 
   // Open file to get properties for
   // return true if successfully or false if failed
@@ -101,6 +101,8 @@ public:
   // return true if handled. else something else will get the execute command
   // Make sure "pExecuteInfo->size == sizeof(ExecuteInfo)"
   virtual bool Execute(ExecuteInfo* /*pExecuteInfo*/) { return false; }
+
+  virtual void FlushCachedForItem(IFileItem* /*pFileItem*/) { return; };
 protected:
 
 };

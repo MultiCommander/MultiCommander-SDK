@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -189,6 +189,7 @@ MCNSBEGIN
 #define MLVS_UNSELONSINGLESEL 0x08000000L // Auto Uncheck all when doing single selection
 #define MLVS_SELECTIONRECT    0x10000000L // Enable selection using selection rectangle
 #define MLVS_HIGHLIGHTSORTCOL 0x20000000L // Highlight sort column
+#define MLVS_DRAGDROPCOLUMNS  0x40000000L // Drag and Drop column order
 #define MLVS_DBGSELECTION     0x80000000L // Enable focus/selection status debugging.
 
 /*
@@ -377,6 +378,7 @@ MCNSBEGIN
 #define ZFVX_DATECREATE  21
 #define ZFVX_DATEMODIFY  22
 #define ZFVX_DATEACCESS  23
+#define ZFVX_REALSIZE    24
 
 #define ZFVX_FRAGMENTS   25
 #define ZFVX_HARDLINKCOUNT 28

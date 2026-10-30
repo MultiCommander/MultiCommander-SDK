@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -27,6 +27,7 @@ public:
   virtual bool      FreeXMLDoc(xmlNodeHandle h) = 0;
 
   virtual xmlNodeHandle Load( const WCHAR* szFilename, bool bKeepBlanks = true) = 0;
+  // XML saves are always written as UTF-8. szEncoding is kept for compatibility and must be nullptr or UTF-8/UTF8, case-insensitive.
   virtual bool      Save( xmlNodeHandle hNode , const WCHAR* szFilename , bool bIndent = true , const char* szEncoding = nullptr) = 0;
   virtual bool      GetEncoding(xmlNodeHandle hNode, char* szEncoding, DWORD dwEncodingLength) = 0; // If xml document was loaded. the get the encoding it was in
 

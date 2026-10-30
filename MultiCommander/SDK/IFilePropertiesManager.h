@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -37,6 +37,7 @@ MCNSBEGIN
 
 
 #define FILEPROP_DONOTCACHEASDISPLAY  0x00100000L // Do not cache value as display value. Value will be featch every thing it is draw.. !! warning! very slow
+#define FILEPROP_FORMAT_FILESIZE      0x00200000L // Format the number as file size (eg 1.5 MB , 234 KB , 23 Bytes, depending on settings)
 #define FILEPROP_EDITABLE             0x01000000L // - Not supported yet
 #define FILEPROP_EXECUTE              0x02000000L // - If set and user Ctrl + DoubleClick on property in the explorerPanel
                                                   //   then IFileProperties->Execute(IFileItem* pFileItem , DWORD PropertyId) is called

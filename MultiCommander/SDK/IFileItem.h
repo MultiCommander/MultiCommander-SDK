@@ -1,7 +1,7 @@
-/*
+﻿/*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -102,7 +102,7 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 3. Always available equals +P -U  -R.
 */
 // MC Extended file attributes Flags ( NOT same as Windows internal - upper 32bit )
-#define ZFF_RESERVED_START    0x0000000100000000ui64 // Start of �MC Extended Attributes (Upper 32bit dword) 
+#define ZFF_RESERVED_START    0x0000000100000000ui64 // Start of ´MC Extended Attributes (Upper 32bit dword) 
 #define ZFF_EXT_NOTUSED1      0x0000000200000000ui64
 #define ZFF_EXT_NOTUSED2      0x0000000400000000ui64
 #define ZFF_EXT_NOTUSED3      0x0000000800000000ui64
@@ -113,7 +113,7 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 #define ZFF_EXT_PSW_PROTECTED 0x0000010000000000ui64 // Item is password protected, Need password to open (eg Item inside protected zip)
 #define ZFF_EXT_NOTUSED9      0x0000020000000000ui64
 #define ZFF_EXT_NOTUSED10     0x0000040000000000ui64 
-#define ZFF_EXT_NOTUSED11     0x0000080000000000ui64
+#define ZFF_RECYLEBIN         0x0000080000000000ui64 // Item is located in the Recycle Bin
 #define ZFF_EXT_NOTUSED12     0x0000100000000000ui64
 #define ZFF_EXT_NOTUSED13     0x0000200000000000ui64 // This is a group item. (VFG - VIrtual Folder Group item) - If real path is required it need to be ask for by calling filesystemmanager->GroupItems
 #define ZFF_CLOUD             0x0000400000000000ui64 // Cloud Drive (onedrive) Item is probably on a cloud synced folder (onedrive) (check ZFF_RECALONDATAACCESS if data is accessable)
@@ -165,6 +165,10 @@ https://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/O
 
 #define ZEXTPROP_UNIXPERMISSIONS 45
 #define ZEXTPROP_GROUPITEM_REFPATH 46 // Group Item Reference Path (primary path) - Used for VFG (Virtual Folder Group) items
+#define ZEXTPROP_RECYCLEBIN_DELETED 47
+#define ZEXTPROP_RECYLEBIN_DELETED ZEXTPROP_RECYCLEBIN_DELETED // Legacy misspelling
+#define ZEXTPROP_RECYCLEBIN_PIDLREF 48
+#define ZEXTPROP_RECYLEBIN_PIDLREF ZEXTPROP_RECYCLEBIN_PIDLREF // Legacy misspelling
 
 #define ZF_TAG1   0x01
 #define ZF_TAG2   0x02

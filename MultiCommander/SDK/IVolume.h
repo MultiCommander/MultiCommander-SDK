@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * IVolume - Interface to inherit from when creating a FileSystem Plugin
@@ -79,9 +79,9 @@ class IVolumeCommandResult;
 // provide a ICON.. both HICON and a Icon Matcher. 
 
 #define IVF_EXECUTEFILE       0x00000008  // IVolume->Execute(..) supported
-#define IVF_CONNECT           0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP Volume)
+#define IVF_CONNECT           0x00000010  // Volume support the Connect()/DisConnect/IsConnected functions. (Eg FTP, SSH, )
 #define IVF_ASSIGN2NUMDEVICE  0x00000020  // Auto Assign device to a Num Device ( 0: -> 9: ) (Require IVG_CONNECT to )
-#define IVF_CMDLINE           0x00000040  // Volume support it own command line commands.
+#define IVF_CMDLINE           0x00000040  // Volume support it own command line commands. (FTP, SSH SFTP)
 #define IVF_HASPACKCONFIGDLG  0x00010000  // if set then ShowPackOptionDlg(...) can be called 
 #define IVF_HASSETTINGSUI     0x00100000  // Volume can show its own Settings UI     (Menu option for this will be auto added under Menu>Configuration>FileSystems)
 #define IVF_GENERICSETTINGS   0x00200000  // Volume support the generic Settings UI. (Menu option for this will be auto added under Menu>Configuration>FileSystems)
@@ -108,7 +108,7 @@ class IVolumeCommandResult;
 // Batch uses Local filesystem as Target/Source locations.
 #define VSO_BATCH_GETITEMS    0x00000020 // Volume needs to handle the Read operations
 #define VSO_BATCH_INSERTITEMS 0x00000040 // Volume needs to handle the Write operations
-#define VSO_BATCH_DELETEITEMS 0x00000080 // Volume needs to handle the Delete operations
+#define VSO_BATCH_DELETEITEMS 0x00000080 // Volume needs to handle the Delete operations (Eg rebuild Zip)
 
 // Modules can support both STREAM and INTERNAL.  Stream is used as default.
 // If VSO_BATCH_TARGETLOCAL is set then INTERNAL will be used if multiple files to be read.
@@ -523,6 +523,18 @@ struct CreateItemContext
   UINT64 FileSize = 0;
 };
 
+struct Assign2NumDevicePathsContext
+{
+  const WCHAR* path = nullptr;
+  WCHAR szInternalDevicePath[_MAX_PATH] = {};
+  WCHAR szDevicePath[_MAX_PATH] = {};
+  WCHAR szDisplayName[_MAX_PATH] = {};
+  DWORD nLen = _MAX_PATH;
+  HICON hIconSmall = nullptr;
+  HICON hIconLarge = nullptr;
+  DWORD dwExtraDeviceFlagInfo = 0;
+};
+
 class __declspec(novtable) IVolume
 {
 public:
@@ -570,6 +582,9 @@ public:
   // Only use PostStartInit if you need to init things from the Main UI thread.. else use PreStartInit
   virtual long PostStartInit(IMultiAppInterface* /*pInterface*/) { return 0; }
 
+  // Call when closing interfaces during shutdown. Use it to free global resources and similar.
+  virtual void OnShutdown() { }
+
   virtual DWORD DataBuffertWriteAlignment(const WCHAR* szPath = nullptr) { return 0; }
 
   virtual bool ShowPackOptionDlg(DWORD /*dwFlags*/, VolumePackOptions* /*pOptions*/, IMultiAppInterface* /*pInterface*/) { return false; }
@@ -600,7 +615,7 @@ public:
   // szDevicePath = \pub\sys
   // szDisplayName = "MySite (FTP)"
   // pIcon = Icon for the item
-  virtual BOOL GetAssign2NumDevicePaths(const WCHAR* /*path*/, WCHAR* OUT /*szInternalDevicePath*/, WCHAR* OUT /*szDevicePath*/, WCHAR* OUT /*szDisplayName*/,  DWORD /*nLen*/, HICON* OUT /*pIcon*/, OUT DWORD& dwExtraDeviceFlagInfo) { return FALSE; }
+  virtual BOOL GetAssign2NumDevicePaths(Assign2NumDevicePathsContext* pContext) { return FALSE; }
 
   ///////////////////[ Override this functions if the IVolume is of type EXT_VDEVICEFS ]////////////////////////////
 
@@ -688,7 +703,7 @@ public:
 
   // GetRootPath()  ( eg if open with  Open( "c:\myzipvolume.zip" ); then GetRootPath should return "c:\myzipvolume.zip\"
   // if open with c:\kalle\nisse  then root path is "c:\" 
-  // if open with c:\myzipvolume.zip\source\crypt then root path is "c:\myzipvolume.zip\"
+  // if open with c:\myzipvolume.zip\source\crypt then root path is "c:\myzipvolume.zip.\"
 
   virtual const WCHAR* GetMountPath() = 0;  // Return the path to where this volume is mounted into the virtual file system
   virtual const WCHAR* GetVolumePath() = 0; // return the real volume path
@@ -815,8 +830,9 @@ public:
   virtual BOOL    BatchFileOperations_Release(ZHANDLE /*hIntOp*/) { return FALSE; }
   ///========================================================================================================
 
-  // Alternative new way to insert/get one file at a time from an volume.
-  // Require that flag VSO_GETFILE / VSO_PUTFILE, (Eg used by FSPortable )
+  // Alternative way to insert/get one file at a time from an volume.
+  // Require that flag VSO_GETFILE / VSO_PUTFILE, for filesystem that does not support streaming (Eg used by FSPortable )
+  // Pug/Get file only read/write to and from local filesystem and plugin. From one FileSystem Plugin to antoher FileSystem Plugin is not supported
   virtual DWORD   PutFile(const WCHAR* szLocalFile, const WCHAR* szTargetPath, DWORD dwFlags, IProgress* pProgress) { return VERROR_NOTIMPLEMENTED; }
   virtual DWORD   GetFile(const WCHAR* szLocalFile, const WCHAR* szSourceFile, DWORD dwFlags, IProgress* pProgress) { return VERROR_NOTIMPLEMENTED; }
 

@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -42,7 +42,8 @@ class __declspec(novtable) IPluginInterface
 public:
   virtual ~IPluginInterface() = default;
   // MultiApp is Initialized
-  virtual long PreStartInit(  IMultiAppInterface* pInterface )= 0;
+  virtual long PreStartInit(  IMultiAppInterface* pInterface ) = 0;
+  virtual void OnShutdown() {}
 
   // This function is the first to be called right after the module is loaded
   // this function should return some Flags, like what type of module this is and so on..
@@ -53,7 +54,8 @@ public:
   virtual BOOL Init(  IMultiAppInterface* pInterface ) = 0;
 
   // Return the module ID that is a GUID string
-  virtual char* Get_ModuleID() = 0;
+  virtual const char*    Get_ModuleID() = 0;
+  virtual const wchar_t* Get_ModuleIDW() = 0;
 
   // If created control can send notifications to the module. those notification message will be received here
   virtual bool OnNotify( ZHANDLE hFrom , DWORD nNotifyMsg , WPARAM wParam = 0 , LPARAM lParam = 0 , void* pExtra = NULL ) = 0;

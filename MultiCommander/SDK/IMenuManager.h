@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -46,6 +46,7 @@ public:
 
   // Add Separator
   virtual long  AddMenuSeperator( ZHANDLE hParentMenu , ZHANDLE hAfterMenu = 0 ) = 0;
+  virtual long  AddMenuSeperator2(ZHANDLE hParentMenu, ZHANDLE hAfterMenu = 0, DWORD nID = 0) = 0;
 
   virtual void  RebuildMenu()=0;
 

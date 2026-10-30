@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Error codes 
@@ -55,6 +55,7 @@ MCNSBEGIN
 #define VERROR_WACCESS_DENIED_VRO 26L // Write Access Denied. volumes is Readonly ( CD/DVD ROM or write protected disk)
 #define VERROR_WACCESS_DENIED_SH  27L // Write Access Denied. file/folder is System or Hidden
 #define VERROR_CANT_ACCESS_PLACEHOLDER 28L // Cant access file becuse it is only a placeholder
+#define VERROR_ACCESS_DENIED_ADMIN 29L // Access to file/folder denied. As admin
 
 #define VERROR_SHARING_VIOLATION  32L // File is being used by another process
 
@@ -99,6 +100,7 @@ MCNSBEGIN
 #define VERROR_FILE_INCOMPLETE      165 // A file write have been aborted.. file X is incomplete
 
 #define VERROR_DELETE_PROTECTED     166 // Can't delete file, it is protected. has S/H or RO attributes
+#define VERROR_SOURCE_CHANGED       167 // Source file size changed while it was being copied
 
 #define VERROR_FILE_CORRUPT         170 // file X is corrupt
 #define VERROR_FILE_CORRUPT_CRC     171 // File %s is corrupt due to CRC error!

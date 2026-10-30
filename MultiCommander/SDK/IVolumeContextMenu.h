@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -36,7 +36,6 @@ public:
   virtual void  FileSystemExecute(DWORD dwResult) = 0;
 
   virtual void  AddParameter(const WCHAR* szParam) = 0;
-
 };
 
 MCNSEND

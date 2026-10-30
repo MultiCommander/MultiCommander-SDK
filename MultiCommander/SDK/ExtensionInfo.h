@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * 
@@ -33,12 +33,13 @@ MCNSBEGIN
 #define EXT_AUTOLOAD    0x00010000 // Autoload extension when MultiCommander is starting. (only valid if also EXT_TYPE_APP is set )
 #define EXT_LOCALFS     0x00020000 // DO NOT USE - Internal flag for LocalFileSystem extension so that there can be some special handling for it make it faster.
 #define EXT_NOLANGFILE  0x00040000 // Do not try to load language file for this module.
-#define EXT_VIRTUALFFS  0x00060000 // DO NOT USE - Internal flag for LocalFileSystem extension so that there can be some special handling for it make it faster.
+#define EXT_VIRTUALFFS  0x00080000 // DO NOT USE - Internal flag for LocalFileSystem extension so that there can be some special handling for it make it faster.
 #define EXT_CANTDISABLE 0x00100000 // The Extension CANT be disabled. ( some internal modules can't be disabled. normally do NOT use this flag )
 #define EXT_PREINIT     0x00200000 // Call PreStartInit at startup for none APP extensions.. Needed for FileSystem/FileProp plugin if you want PreStartInit to be called (However PreStartInit is not called from main thread..)
 #define EXT_VDEVICEFS   0x00400000 // Virtual Device Filesystem. A virtual filesystem that is not located in a file(.zip/.rar) but in a Device (reg: , ftp: ).
                                    // eg. REG: FTP: .. ( the wsDefaultValues[0] is then not for matching extension but for matching devices ( eg "reg:")
 #define EXT_POSTINIT    0x01000000 // Call PostStartInit at the end of the startup phase. this call is called from the main ui thread, ( EXT_PREINIT is not )
+#define EXT_SHUTDOWN    0x02000000 // Call Shutdown when MultiCommander is closing. ( EXT_TYPE_APP extensions always get Shutdown called )
 
 struct DLLExtensionInfo
 {

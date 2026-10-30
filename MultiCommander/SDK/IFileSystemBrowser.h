@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * Changes
@@ -160,6 +160,7 @@ public:
 #define FTREEVIEW_AUTOHORZSCROLL      0x00000008    // Auto horizontal scroll to show as much of name as possible
 #define FTREEVIEW_HIGHLIGHT_CURRENT   0x00000010    // Highlight the current focus item
 #define FTREEVIEW_HIGHLIGHT_PARENT    0x00000020    // Highlight parent of item that is highlighted
+#define FTREEVIEW_SHOWLINKTARGETNAME  0x00000040    // Show link target name in tree (eg myfolder -> [s] c:\users\myfolder )
 
 // Highlight style
 #define FTREEVIEW_HIGHLIGHT_BOLD       0x00000001

@@ -1,7 +1,7 @@
 /*
  * Multi Commander - SDK
  * 
- * Copyright (C) 2025 All Rights Reserved , http://multicommander.com
+ * Copyright (C) 2026 All Rights Reserved , http://multicommander.com
  * =======================================================================================
  * 
  * 
@@ -95,6 +95,8 @@ public:
   virtual void SetErrorCode(DWORD dwError) = 0;
 
   virtual void SetScriptResult(const WCHAR* szValue) = 0;
+
+  virtual bool IsOptionValueTrue(const char* optionName) = 0;
 };
 
 class __declspec(novtable) ICustomCommandDef
